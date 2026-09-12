@@ -1,0 +1,27 @@
+<Window x:Class="ConsoleMenu.Wpf.OverlayWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Overlay"
+        Height="360" Width="520"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="#CC000000"
+        Topmost="True"
+        WindowStartupLocation="CenterScreen"
+        ShowInTaskbar="False">
+    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+        <TextBlock Text="Быстрое меню"
+                   Foreground="White"
+                   FontSize="28"
+                   Margin="0,0,0,16"/>
+
+        <Button Content="Открыть главное окно"
+                Width="240"
+                Margin="0,0,0,8"
+                Click="OpenMain_Click"/>
+
+        <Button Content="Закрыть"
+                Width="240"
+                Click="Close_Click"/>
+    </StackPanel>
+</Window>

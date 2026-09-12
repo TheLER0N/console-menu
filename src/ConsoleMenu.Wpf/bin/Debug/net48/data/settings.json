@@ -1,0 +1,8 @@
+{
+  "Theme": "ps4",
+  "InstallDirectory": "C:\\Users\\290-23\\Desktop\\console-menu\\src\\ConsoleMenu.Wpf\\bin\\Debug\\net48\\data\\installs",
+  "OverlayHotKey": "Ctrl\u002BShift\u002BM",
+  "EnableBoost": true,
+  "ActiveProfileId": "",
+  "GitHubToken": ""
+}
