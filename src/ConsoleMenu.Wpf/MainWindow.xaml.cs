@@ -1,17 +1,28 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Threading;
 using Microsoft.Win32;
+using ConsoleMenu.Core.GitHub;
 using ConsoleMenu.Core.Models;
+using ConsoleMenu.Core.Services;
 using ConsoleMenu.Core.Storage;
 using ConsoleMenu.Wpf.Services;
 
 namespace ConsoleMenu.Wpf
 {
+    public class NavItem
+    {
+        public string Glyph { get; set; }
+        public string Label { get; set; }
+    }
+
     public partial class MainWindow : Window
     {
         private bool _loading;
@@ -20,9 +31,11 @@ namespace ConsoleMenu.Wpf
         private StoreConfig _store;
         private GameStore _games;
         private ProfileStore _profiles;
+        private List<GitHubRelease> _releases = new List<GitHubRelease>();
 
         private HotkeyService _hotkey;
         private OverlayWindow _overlay;
+        private DispatcherTimer _clockTimer;
 
         public MainWindow()
         {
@@ -36,8 +49,10 @@ namespace ConsoleMenu.Wpf
             ApplyTheme();
             InitThemeCombo();
             InitStoreCombo();
+            BuildNav();
+            StartClock();
             RegisterHotkey();
-            _ = OpenStorePageAsync();
+            _ = InitStoreViewAsync();
         }
 
         private void LoadData()
@@ -53,10 +68,47 @@ namespace ConsoleMenu.Wpf
                 SaveProfiles();
             }
 
+            ProfileNameText.Text = _profiles.Profiles[0].Name;
             GamesList.ItemsSource = _games.Games;
             ProfilesList.ItemsSource = _profiles.Profiles;
             EnableBoostCheck.IsChecked = _settings.EnableBoost;
             GitHubTokenBox.Text = _settings.GitHubToken;
+        }
+
+        private void BuildNav()
+        {
+            NavList.ItemsSource = new List<NavItem>
+            {
+                new NavItem { Glyph = "\uE7FC", Label = "Игры" },
+                new NavItem { Glyph = "\uE7BF", Label = "Магазин" },
+                new NavItem { Glyph = "\uE713", Label = "Настройки" },
+                new NavItem { Glyph = "\uE77B", Label = "Профили" },
+                new NavItem { Glyph = "\uE8B2", Label = "Медиа" }
+            };
+
+            NavList.SelectedIndex = 0;
+        }
+
+        private void NavList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ShowPanel(NavList.SelectedIndex);
+        }
+
+        private void ShowPanel(int index)
+        {
+            GamesPanel.Visibility = index == 0 ? Visibility.Visible : Visibility.Collapsed;
+            StorePanel.Visibility = index == 1 ? Visibility.Visible : Visibility.Collapsed;
+            SettingsPanel.Visibility = index == 2 ? Visibility.Visible : Visibility.Collapsed;
+            ProfilesPanel.Visibility = index == 3 ? Visibility.Visible : Visibility.Collapsed;
+            MediaPanel.Visibility = index == 4 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void StartClock()
+        {
+            ClockText.Text = DateTime.Now.ToString("HH:mm");
+            _clockTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+            _clockTimer.Tick += (s, e) => ClockText.Text = DateTime.Now.ToString("HH:mm");
+            _clockTimer.Start();
         }
 
         private void InitThemeCombo()
@@ -66,19 +118,13 @@ namespace ConsoleMenu.Wpf
             _loading = false;
         }
 
-        private void InitStoreCombo()
-        {
-            StoreRepoCombo.ItemsSource = _store.Entries.Select(x => x.Repo).ToList();
-            if (StoreRepoCombo.Items.Count > 0)
-                StoreRepoCombo.SelectedIndex = 0;
-        }
-
         private void ApplyTheme()
         {
             var theme = string.Equals(_settings.Theme, "ps4", StringComparison.OrdinalIgnoreCase) ? "PS4" : "PS5";
+
             var dictionary = new ResourceDictionary
             {
-                Source = new Uri($"Themes/{theme}.xaml", UriKind.Relative)
+                Source = new Uri("pack://application:,,,/ConsoleMenu.Wpf;component/Themes/" + theme + ".xaml")
             };
 
             Application.Current.Resources.MergedDictionaries.Clear();
@@ -97,6 +143,29 @@ namespace ConsoleMenu.Wpf
             _settings.Theme = theme;
             SaveSettings();
             ApplyTheme();
+        }
+
+        private void InitStoreCombo()
+        {
+            StoreRepoCombo.ItemsSource = _store.Entries.Select(x => x.Repo).ToList();
+            if (StoreRepoCombo.Items.Count > 0)
+                StoreRepoCombo.SelectedIndex = 0;
+        }
+
+        private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ButtonState == MouseButtonState.Pressed)
+                DragMove();
+        }
+
+        private void Minimize_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
 
         private void AddGameButton_Click(object sender, RoutedEventArgs e)
@@ -128,6 +197,7 @@ namespace ConsoleMenu.Wpf
 
             if (game == null)
             {
+                StoreStatus.Text = "";
                 MessageBox.Show("Выбери игру.");
                 return;
             }
@@ -166,6 +236,16 @@ namespace ConsoleMenu.Wpf
             }
         }
 
+        private void RemoveGameButton_Click(object sender, RoutedEventArgs e)
+        {
+            var game = GamesList.SelectedItem as GameEntry;
+            if (game == null) return;
+
+            _games.Games.Remove(game);
+            SaveGames();
+            RefreshGames();
+        }
+
         private void RefreshGames()
         {
             GamesList.ItemsSource = null;
@@ -178,12 +258,7 @@ namespace ConsoleMenu.Wpf
             ProfilesList.ItemsSource = _profiles.Profiles;
         }
 
-        private void OpenStorePage_Click(object sender, RoutedEventArgs e)
-        {
-            _ = OpenStorePageAsync();
-        }
-
-        private async Task OpenStorePageAsync()
+        private async Task InitStoreViewAsync()
         {
             try
             {
@@ -195,10 +270,136 @@ namespace ConsoleMenu.Wpf
 
                 StoreWebView.CoreWebView2.Navigate(new Uri(page).AbsoluteUri);
             }
+            catch
+            {
+                ShowStoreFallback();
+            }
+        }
+
+        private void ShowStoreFallback()
+        {
+            StoreWebView.Visibility = Visibility.Collapsed;
+            StoreFallback.Visibility = Visibility.Visible;
+        }
+
+        private void OpenPageBrowser_Click(object sender, RoutedEventArgs e)
+        {
+            var page = Path.Combine(App.DataDirectory, "store-page.html");
+            if (!File.Exists(page)) return;
+
+            try
+            {
+                Process.Start(new ProcessStartInfo { FileName = page, UseShellExecute = true });
+            }
+            catch
+            {
+                // Браузер не открылся — не критично для оболочки.
+            }
+        }
+
+        private async void RefreshReleases_Click(object sender, RoutedEventArgs e)
+        {
+            var repo = StoreRepoCombo.SelectedItem as string;
+            if (string.IsNullOrWhiteSpace(repo)) return;
+
+            StoreStatus.Text = "Загрузка релизов...";
+
+            try
+            {
+                var client = new GitHubReleaseClient(TokenOrNull());
+                _releases = await client.GetReleasesAsync(repo);
+
+                ReleasesList.ItemsSource = null;
+                ReleasesList.ItemsSource = _releases;
+
+                StoreStatus.Text = "Релизов: " + _releases.Count;
+            }
             catch (Exception ex)
             {
-                MessageBox.Show("WebView2 недоступен: " + ex.Message);
+                StoreStatus.Text = "Ошибка: " + ex.Message;
             }
+        }
+
+        private async void InstallRelease_Click(object sender, RoutedEventArgs e)
+        {
+            var release = ReleasesList.SelectedItem as GitHubRelease;
+            var repo = StoreRepoCombo.SelectedItem as string;
+
+            if (release == null || string.IsNullOrWhiteSpace(repo))
+            {
+                StoreStatus.Text = "Выбери релиз.";
+                return;
+            }
+
+            var entry = _store.Entries.FirstOrDefault(x => x.Repo == repo) ?? new StoreEntry();
+            var asset = release.Assets?.FirstOrDefault(a => MatchesPattern(a.Name, entry.AssetPattern));
+            var url = asset != null ? asset.DownloadUrl : release.ZipballUrl;
+
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                StoreStatus.Text = "У релиза нет ZIP.";
+                return;
+            }
+
+            StoreStatus.Text = "Скачивание...";
+
+            try
+            {
+                var client = new GitHubReleaseClient(TokenOrNull());
+
+                var safeRepo = string.Join("_", repo.Split('/'));
+                var safeTag = Sanitize(release.TagName ?? "release");
+
+                var dest = Path.Combine(_settings.InstallDirectory, safeRepo, safeTag);
+                var zipPath = Path.Combine(_settings.InstallDirectory, safeRepo, safeTag + ".zip");
+
+                await client.DownloadFileAsync(url, zipPath);
+                SafeZip.ExtractToDirectory(zipPath, dest);
+                File.Delete(zipPath);
+
+                var exe = Directory.GetFiles(dest, "*.exe", SearchOption.AllDirectories).FirstOrDefault();
+
+                var game = new GameEntry
+                {
+                    Title = repo + " " + (release.TagName ?? ""),
+                    ExePath = exe ?? "",
+                    WorkingDirectory = exe != null ? Path.GetDirectoryName(exe) : dest,
+                    Source = "github"
+                };
+
+                _games.Games.Add(game);
+                SaveGames();
+                RefreshGames();
+
+                StoreStatus.Text = exe != null
+                    ? "Установлено: " + game.Title
+                    : "Установлено, но .exe не найден — укажи путь в Играх.";
+            }
+            catch (Exception ex)
+            {
+                StoreStatus.Text = "Ошибка установки: " + ex.Message;
+            }
+        }
+
+        private string TokenOrNull()
+        {
+            return string.IsNullOrWhiteSpace(_settings?.GitHubToken) ? null : _settings.GitHubToken;
+        }
+
+        private static bool MatchesPattern(string name, string pattern)
+        {
+            if (string.IsNullOrWhiteSpace(name)) return false;
+
+            if (string.IsNullOrWhiteSpace(pattern))
+                return name.EndsWith(".zip", StringComparison.OrdinalIgnoreCase);
+
+            var ext = pattern.TrimStart('*');
+            return name.EndsWith(ext, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string Sanitize(string value)
+        {
+            return string.Join("_", value.Split(Path.GetInvalidFileNameChars()));
         }
 
         private void SaveSettings_Click(object sender, RoutedEventArgs e)

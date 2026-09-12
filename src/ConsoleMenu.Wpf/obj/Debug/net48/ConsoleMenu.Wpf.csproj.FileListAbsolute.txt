@@ -1,4 +1,3 @@
-C:\Users\290-23\Desktop\console-menu\src\ConsoleMenu.Wpf\bin\Debug\net48\runtimes\win-x86\native\WebView2Loader.dll
 C:\Users\290-23\Desktop\console-menu\src\ConsoleMenu.Wpf\bin\Debug\net48\data\games.json
 C:\Users\290-23\Desktop\console-menu\src\ConsoleMenu.Wpf\bin\Debug\net48\data\profiles.json
 C:\Users\290-23\Desktop\console-menu\src\ConsoleMenu.Wpf\bin\Debug\net48\data\settings.json
@@ -43,3 +42,6 @@ C:\Users\290-23\Desktop\console-menu\src\ConsoleMenu.Wpf\obj\Debug\net48\Console
 C:\Users\290-23\Desktop\console-menu\src\ConsoleMenu.Wpf\obj\Debug\net48\ConsoleMenu.Wpf.csproj.CopyComplete
 C:\Users\290-23\Desktop\console-menu\src\ConsoleMenu.Wpf\obj\Debug\net48\ConsoleMenu.Wpf.exe
 C:\Users\290-23\Desktop\console-menu\src\ConsoleMenu.Wpf\obj\Debug\net48\ConsoleMenu.Wpf.pdb
+C:\Users\290-23\Desktop\console-menu\src\ConsoleMenu.Wpf\bin\Debug\net48\runtimes\win-x64\native\WebView2Loader.dll
+C:\Users\290-23\Desktop\console-menu\src\ConsoleMenu.Wpf\obj\Debug\net48\SplashWindow.baml
+C:\Users\290-23\Desktop\console-menu\src\ConsoleMenu.Wpf\obj\Debug\net48\SplashWindow.g.cs

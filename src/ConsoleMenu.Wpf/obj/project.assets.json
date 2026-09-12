@@ -193,7 +193,7 @@
         }
       }
     },
-    ".NETFramework,Version=v4.8/win7-x86": {
+    ".NETFramework,Version=v4.8/win7-x64": {
       "Microsoft.Bcl.AsyncInterfaces/8.0.0": {
         "type": "package",
         "dependencies": {
@@ -234,7 +234,7 @@
           "lib/net462/Microsoft.Web.WebView2.Wpf.dll": {}
         },
         "native": {
-          "runtimes/win-x86/native/WebView2Loader.dll": {}
+          "runtimes/win-x64/native/WebView2Loader.dll": {}
         },
         "build": {
           "buildTransitive/Microsoft.Web.WebView2.targets": {}
@@ -1281,7 +1281,7 @@
       }
     },
     "runtimes": {
-      "win7-x86": {
+      "win7-x64": {
         "#import": []
       }
     }

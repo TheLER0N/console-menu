@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Windows;
+using System.Windows.Threading;
 using ConsoleMenu.Core.Models;
 using ConsoleMenu.Core.Storage;
 
@@ -29,6 +30,19 @@ namespace ConsoleMenu.Wpf
             EnsureDefaults();
 
             base.OnStartup(e);
+
+            var splash = new SplashWindow();
+            splash.Show();
+
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1200) };
+            timer.Tick += (s, args) =>
+            {
+                timer.Stop();
+                var main = new MainWindow();
+                main.Show();
+                splash.Close();
+            };
+            timer.Start();
         }
 
         private void EnsureDefaults()

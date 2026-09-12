@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NETFRAMEWORK;NET48;
 C:\Users\290-23\Desktop\console-menu\src\ConsoleMenu.Wpf\App.xaml
-4-1052188051
-1-572764898
-51684071219
+51958994977
+11082422690
+6-1486688840
 35-892428694
-MainWindow.xaml;OverlayWindow.xaml;Themes\PS4.xaml;Themes\PS5.xaml;
+MainWindow.xaml;OverlayWindow.xaml;SplashWindow.xaml;Themes\PS4.xaml;Themes\PS5.xaml;
 
 False
 
