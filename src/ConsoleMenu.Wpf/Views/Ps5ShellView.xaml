@@ -1,5 +1,5 @@
-﻿<UserControl x:Class="ConsoleMenu.Wpf.Views.Ps5ShellView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<views:ShellViewBase x:Class="ConsoleMenu.Wpf.Views.Ps5ShellView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:views="clr-namespace:ConsoleMenu.Wpf.Views"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
              Background="Transparent">
@@ -76,4 +76,4 @@
             </Grid>
         </Grid>
     </Border>
-</UserControl>
+</views:ShellViewBase>
