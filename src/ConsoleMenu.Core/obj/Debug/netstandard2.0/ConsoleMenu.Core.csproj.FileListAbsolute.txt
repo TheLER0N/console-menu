@@ -8,3 +8,14 @@ C:\Users\290-23\Desktop\console-menu\src\ConsoleMenu.Core\obj\Debug\netstandard2
 C:\Users\290-23\Desktop\console-menu\src\ConsoleMenu.Core\obj\Debug\netstandard2.0\ConsoleMenu.Core.csproj.CoreCompileInputs.cache
 C:\Users\290-23\Desktop\console-menu\src\ConsoleMenu.Core\obj\Debug\netstandard2.0\ConsoleMenu.Core.dll
 C:\Users\290-23\Desktop\console-menu\src\ConsoleMenu.Core\obj\Debug\netstandard2.0\ConsoleMenu.Core.pdb
+C:\Users\Пользователь\Desktop\console-menu\src\ConsoleMenu.Core\bin\Debug\netstandard2.0\ConsoleMenu.Core.deps.json
+C:\Users\Пользователь\Desktop\console-menu\src\ConsoleMenu.Core\bin\Debug\netstandard2.0\ConsoleMenu.Core.dll
+C:\Users\Пользователь\Desktop\console-menu\src\ConsoleMenu.Core\bin\Debug\netstandard2.0\ConsoleMenu.Core.pdb
+C:\Users\Пользователь\Desktop\console-menu\src\ConsoleMenu.Core\obj\Debug\netstandard2.0\ConsoleMenu.Core.csproj.AssemblyReference.cache
+C:\Users\Пользователь\Desktop\console-menu\src\ConsoleMenu.Core\obj\Debug\netstandard2.0\ConsoleMenu.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Пользователь\Desktop\console-menu\src\ConsoleMenu.Core\obj\Debug\netstandard2.0\ConsoleMenu.Core.AssemblyInfoInputs.cache
+C:\Users\Пользователь\Desktop\console-menu\src\ConsoleMenu.Core\obj\Debug\netstandard2.0\ConsoleMenu.Core.AssemblyInfo.cs
+C:\Users\Пользователь\Desktop\console-menu\src\ConsoleMenu.Core\obj\Debug\netstandard2.0\ConsoleMenu.Core.csproj.CoreCompileInputs.cache
+C:\Users\Пользователь\Desktop\console-menu\src\ConsoleMenu.Core\obj\Debug\netstandard2.0\ConsoleMenu.Core.sourcelink.json
+C:\Users\Пользователь\Desktop\console-menu\src\ConsoleMenu.Core\obj\Debug\netstandard2.0\ConsoleMenu.Core.dll
+C:\Users\Пользователь\Desktop\console-menu\src\ConsoleMenu.Core\obj\Debug\netstandard2.0\ConsoleMenu.Core.pdb

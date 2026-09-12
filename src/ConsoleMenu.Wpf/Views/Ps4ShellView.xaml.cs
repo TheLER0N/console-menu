@@ -1,0 +1,1 @@
+﻿namespace ConsoleMenu.Wpf.Views { public partial class Ps4ShellView : ShellViewBase { public Ps4ShellView() { InitializeComponent(); } protected override string ThemeName => "ps4"; } }
