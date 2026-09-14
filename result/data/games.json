@@ -1,3 +1,16 @@
 {
-  "Games": []
+  "Games": [
+    {
+      "Id": "235a40b64d134f5f9fa6a9b04d8d7bb3",
+      "Title": "WindowsFormsApp1",
+      "ExePath": "C:\\Users\\290-23\\Desktop\\WindowsFormsApp1\\WindowsFormsApp1\\bin\\Debug\\WindowsFormsApp1.exe",
+      "Arguments": "",
+      "WorkingDirectory": "C:\\Users\\290-23\\Desktop\\WindowsFormsApp1\\WindowsFormsApp1\\bin\\Debug",
+      "CoverPath": "",
+      "HeroPath": "",
+      "BoostProfile": "balanced",
+      "Source": "local",
+      "LastLaunchUtc": "2026-09-14T09:30:34.8498453Z"
+    }
+  ]
 }

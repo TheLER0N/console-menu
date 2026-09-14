@@ -251,6 +251,14 @@ namespace ConsoleMenu.Wpf.Views
         private void CloseWindow() { var window = GetWindow(); if (window != null) window.Close(); }
         private void InstallLatestRelease() { _ = InstallLatestReleaseAsync(); }
         private async Task InstallLatestReleaseAsync() { try { var result = await ShellDataService.InstallLatestReleaseAsync(); ShowToast(result); RefreshGames(); } catch (Exception ex) { ShowToast("Install error: " + ex.Message); } }
+        private void ApplyThemeDeferred()
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                var mw = GetWindow() as MainWindow;
+                if (mw != null) mw.ApplyTheme();
+            }));
+        }
         private void CoreWebView2_WebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
         {
             try
@@ -270,14 +278,21 @@ namespace ConsoleMenu.Wpf.Views
                     case "launchselected": Launch_Click(null, null); break;
                     case "installlatest": InstallLatestRelease(); break;
                     case "refreshgames": RefreshGames(); break;
-                    case "settheme": if (!string.IsNullOrWhiteSpace(message.Value)) { ShellDataService.Settings.Theme = message.Value; ShellDataService.SaveSettings(); var mw = GetWindow() as MainWindow; if (mw != null) mw.ApplyTheme(); } break;
+                    case "settheme":
+                        if (!string.IsNullOrWhiteSpace(message.Value))
+                        {
+                            ShellDataService.Settings.Theme = message.Value;
+                            ShellDataService.SaveSettings();
+                            ApplyThemeDeferred();
+                        }
+                        break;
                     case "addprofile": if (!string.IsNullOrWhiteSpace(message.Value)) { ShellDataService.Profiles.Profiles.Add(new ProfileEntry { Name = message.Value }); ShellDataService.SaveProfiles(); RefreshProfile(); } break;
                 }
             }
-            catch { }
+            catch (Exception ex) { ShowToast("Web message error: " + ex.Message); }
         }
-        private class WebMessage { [JsonPropertyName("action")] public string Action { get; set; } [JsonPropertyName("value")] public string Value { get; set; } }
     }
+    public sealed class WebMessage { [JsonPropertyName("action")] public string Action { get; set; } [JsonPropertyName("value")] public string Value { get; set; } }
     public sealed class NotEmptyToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type t, object p, CultureInfo c) { return string.IsNullOrWhiteSpace(value as string) ? Visibility.Collapsed : Visibility.Visible; }
