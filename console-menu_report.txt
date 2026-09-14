@@ -1,6 +1,6 @@
 ﻿================================================================
   PROJECT REPORT : console-menu
-  GENERATED      : 14.09.2026 13:59:26
+  GENERATED      : 14.09.2026 14:07:50
   PATH           : C:\Users\290-23\Desktop\console\console-menu
 ================================================================
 
@@ -90,7 +90,7 @@ C:\Users\290-23\Desktop\console\console-menu
 |   |   \---EBWebView
 |   |       +---AutoLaunchProtocolsComponent
 |   |       +---BrowserMetrics
-|   |       |   \---BrowserMetrics-6AA7D362-37A0.pma
+|   |       |   \---BrowserMetrics-6AA7D55D-29BC.pma
 |   |       +---CertificateRevocation
 |   |       +---component_crx_cache
 |   |       |   \---metadata.json
@@ -108,7 +108,7 @@ C:\Users\290-23\Desktop\console\console-menu
 |   |       |   |   +---LOCK
 |   |       |   |   \---LOG
 |   |       |   +---blob_storage
-|   |       |   |   \---1506be22-5e35-4be3-a54e-1dae1bcc3690
+|   |       |   |   \---cea25f1e-cbad-45a4-90a7-535788c4acbc
 |   |       |   +---BookmarkMergedSurfaceOrdering
 |   |       |   +---BudgetDatabase
 |   |       |   |   +---LOCK
@@ -3112,7 +3112,7 @@ xmlns:views="clr-namespace:ConsoleMenu.Wpf.Views">
 
 ------------------------------------------------
 FILE: src\ConsoleMenu.Wpf\Views\Ps4ShellView.xaml
-SIZE: 7524 bytes
+SIZE: 7654 bytes
 ------------------------------------------------
 <views:ShellViewBase x:Class="ConsoleMenu.Wpf.Views.Ps4ShellView"
 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -3182,20 +3182,21 @@ ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollB
 <Setter Property="Template">
 <Setter.Value>
 <ControlTemplate TargetType="ListBoxItem">
-<StackPanel Width="164" Margin="0,0,10,0" HorizontalAlignment="Center">
-<Border x:Name="Bd" Width="150" Height="150" BorderThickness="3" BorderBrush="#00FFFFFF"
-Background="Transparent" RenderTransformOrigin="0.5,0.5">
-<ContentPresenter/>
+<StackPanel Width="176" Margin="0,0,8,0" HorizontalAlignment="Center">
+<Border x:Name="Bd" Width="156" Height="156" BorderThickness="3" BorderBrush="#00FFFFFF"
+Background="Transparent" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center">
+<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
 </Border>
 <TextBlock Text="{Binding Converter={StaticResource TileLabel}}" FontSize="13" Foreground="White"
-HorizontalAlignment="Center" Margin="0,8,0,0" TextTrimming="CharacterEllipsis" MaxWidth="164"/>
+HorizontalAlignment="Center" Margin="0,8,0,0" TextTrimming="CharacterEllipsis" MaxWidth="176"/>
 </StackPanel>
 <ControlTemplate.Triggers>
 <Trigger Property="IsSelected" Value="True">
 <Setter TargetName="Bd" Property="BorderBrush" Value="#FFFFFFFF"/>
 <Setter TargetName="Bd" Property="RenderTransform">
-<Setter.Value><ScaleTransform ScaleX="1.1" ScaleY="1.1"/></Setter.Value>
+<Setter.Value><ScaleTransform ScaleX="1.08" ScaleY="1.08"/></Setter.Value>
 </Setter>
+<Setter Property="Panel.ZIndex" Value="1"/>
 </Trigger>
 </ControlTemplate.Triggers>
 </ControlTemplate>
@@ -3279,7 +3280,7 @@ namespace ConsoleMenu.Wpf.Views
 
 ------------------------------------------------
 FILE: src\ConsoleMenu.Wpf\Views\Ps5ShellView.xaml
-SIZE: 5641 bytes
+SIZE: 5741 bytes
 ------------------------------------------------
 <views:ShellViewBase x:Class="ConsoleMenu.Wpf.Views.Ps5ShellView"
 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -3332,9 +3333,9 @@ ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollB
 <Setter Property="Template">
 <Setter.Value>
 <ControlTemplate TargetType="ListBoxItem">
-<Border x:Name="Bd" Width="90" Height="90" Margin="0,0,8,0" CornerRadius="8" BorderThickness="3" BorderBrush="#00FFFFFF"
+<Border x:Name="Bd" Width="96" Height="96" Margin="0,0,8,0" CornerRadius="8" BorderThickness="3" BorderBrush="#00FFFFFF"
 Background="Transparent" RenderTransformOrigin="0.5,0.5">
-<ContentPresenter/>
+<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
 </Border>
 <ControlTemplate.Triggers>
 <Trigger Property="IsSelected" Value="True">
@@ -3342,6 +3343,7 @@ Background="Transparent" RenderTransformOrigin="0.5,0.5">
 <Setter TargetName="Bd" Property="RenderTransform">
 <Setter.Value><ScaleTransform ScaleX="1.08" ScaleY="1.08"/></Setter.Value>
 </Setter>
+<Setter Property="Panel.ZIndex" Value="1"/>
 </Trigger>
 </ControlTemplate.Triggers>
 </ControlTemplate>

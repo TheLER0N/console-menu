@@ -66,20 +66,18 @@ ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollB
 <Setter Property="Template">
 <Setter.Value>
 <ControlTemplate TargetType="ListBoxItem">
-<StackPanel Width="164" Margin="0,0,10,0" HorizontalAlignment="Center">
-<Border x:Name="Bd" Width="150" Height="150" BorderThickness="3" BorderBrush="#00FFFFFF"
-Background="Transparent" RenderTransformOrigin="0.5,0.5">
-<ContentPresenter/>
+<StackPanel Width="176" Margin="0,0,8,0" HorizontalAlignment="Center">
+<Border x:Name="Bd" Width="156" Height="156" BorderThickness="3" BorderBrush="#00FFFFFF"
+Background="Transparent" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center">
+<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
 </Border>
 <TextBlock Text="{Binding Converter={StaticResource TileLabel}}" FontSize="13" Foreground="White"
-HorizontalAlignment="Center" Margin="0,8,0,0" TextTrimming="CharacterEllipsis" MaxWidth="164"/>
+HorizontalAlignment="Center" Margin="0,8,0,0" TextTrimming="CharacterEllipsis" MaxWidth="176"/>
 </StackPanel>
 <ControlTemplate.Triggers>
 <Trigger Property="IsSelected" Value="True">
 <Setter TargetName="Bd" Property="BorderBrush" Value="#FFFFFFFF"/>
-<Setter TargetName="Bd" Property="RenderTransform">
-<Setter.Value><ScaleTransform ScaleX="1.1" ScaleY="1.1"/></Setter.Value>
-</Setter>
+<Setter Property="Panel.ZIndex" Value="1"/>
 </Trigger>
 </ControlTemplate.Triggers>
 </ControlTemplate>

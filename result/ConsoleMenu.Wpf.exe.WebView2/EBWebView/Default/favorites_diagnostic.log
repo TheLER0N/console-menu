@@ -1,9 +1,9 @@
-2026-09-14 10:58:42.407: [INFO] CurrentProfilePath: C:\Users\290-23\Desktop\console\console-menu\result\ConsoleMenu.Wpf.exe.WebView2\EBWebView\Default
-2026-09-14 10:58:42.407: [INFO] Profiles total count: 1
-2026-09-14 10:58:42.407: [INFO] Profile: name=Профиль 1 path=C:\Users\290-23\Desktop\console\console-menu\result\ConsoleMenu.Wpf.exe.WebView2\EBWebView\Default lastActive=null
-2026-09-14 10:58:42.407: [INFO] LastUsedProfileDir: C:\Users\290-23\Desktop\console\console-menu\result\ConsoleMenu.Wpf.exe.WebView2\EBWebView\Default
-2026-09-14 10:58:42.407: [INFO] OnDoneLoading sync enabled: 0
-2026-09-14 10:58:42.407: [INFO] BookmarkModelLoaded, ids_reassigned: 0
-2026-09-14 10:58:42.407: [INFO] BookmarksLoadDropped droppedNodes=0
-2026-09-14 10:58:42.407: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
-2026-09-14 10:59:12.805: [INFO] BookmarksSnapshot Shutdown total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-09-14 11:11:50.187: [INFO] CurrentProfilePath: C:\Users\290-23\Desktop\console\console-menu\result\ConsoleMenu.Wpf.exe.WebView2\EBWebView\Default
+2026-09-14 11:11:50.187: [INFO] Profiles total count: 1
+2026-09-14 11:11:50.187: [INFO] Profile: name=Профиль 1 path=C:\Users\290-23\Desktop\console\console-menu\result\ConsoleMenu.Wpf.exe.WebView2\EBWebView\Default lastActive=null
+2026-09-14 11:11:50.187: [INFO] LastUsedProfileDir: C:\Users\290-23\Desktop\console\console-menu\result\ConsoleMenu.Wpf.exe.WebView2\EBWebView\Default
+2026-09-14 11:11:50.187: [INFO] OnDoneLoading sync enabled: 0
+2026-09-14 11:11:50.187: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-09-14 11:11:50.187: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-09-14 11:11:50.187: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-09-14 11:12:18.795: [INFO] BookmarksSnapshot Shutdown total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
