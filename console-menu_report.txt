@@ -1,6 +1,6 @@
 ﻿================================================================
   PROJECT REPORT : console-menu
-  GENERATED      : 14.09.2026 12:22:08
+  GENERATED      : 14.09.2026 13:59:26
   PATH           : C:\Users\290-23\Desktop\console\console-menu
 ================================================================
 
@@ -89,15 +89,10 @@ C:\Users\290-23\Desktop\console\console-menu
 |   +---ConsoleMenu.Wpf.exe.WebView2
 |   |   \---EBWebView
 |   |       +---AutoLaunchProtocolsComponent
-|   |       |   \---1.0.0.12
-|   |       |       +---manifest.json
-|   |       |       \---protocols.json
 |   |       +---BrowserMetrics
-|   |       |   \---BrowserMetrics-6AA7BC61-20D8.pma
+|   |       |   \---BrowserMetrics-6AA7D362-37A0.pma
 |   |       +---CertificateRevocation
 |   |       +---component_crx_cache
-|   |       |   +---95fd9d48e4fc245a3f3a99a3a16ecd1355050ba3f4afc555f19a97c7f9b49677
-|   |       |   +---cde4f808f038aaffece9680c0356ded00c81c4559e0a431acb45d1276425d9eb
 |   |       |   \---metadata.json
 |   |       +---Crashpad
 |   |       |   +---attachments
@@ -113,7 +108,7 @@ C:\Users\290-23\Desktop\console\console-menu
 |   |       |   |   +---LOCK
 |   |       |   |   \---LOG
 |   |       |   +---blob_storage
-|   |       |   |   \---db641e3f-c9a2-4f71-9583-ddb237029762
+|   |       |   |   \---1506be22-5e35-4be3-a54e-1dae1bcc3690
 |   |       |   +---BookmarkMergedSurfaceOrdering
 |   |       |   +---BudgetDatabase
 |   |       |   |   +---LOCK
@@ -302,8 +297,6 @@ C:\Users\290-23\Desktop\console\console-menu
 |   |       +---Local State
 |   |       +---MEIPreload
 |   |       +---OriginTrials
-|   |       |   \---0.0.1.7
-|   |       |       \---manifest.json
 |   |       +---PKIMetadata
 |   |       +---ShaderCache
 |   |       |   +---data_0
@@ -1140,7 +1133,7 @@ function send(action, value) { if (window.chrome && chrome.webview) { chrome.web
 
 ------------------------------------------------
 FILE: build\publish\data\ui\ps4\settings.html
-SIZE: 1109 bytes
+SIZE: 1694 bytes
 ------------------------------------------------
 <!doctype html>
 <html lang='en'>
@@ -1149,17 +1142,27 @@ SIZE: 1109 bytes
 <title>PS4 - Settings</title>
 <style>
 body { margin:0; min-height:100vh; font-family:Segoe UI,Arial; color:#fff; background:linear-gradient(180deg,#00439C,#00265E); }
-.top { padding:18px 24px; font-size:24px; font-weight:600; color:#BBDEFB; }
-.card { margin:0 24px 24px; padding:24px; border-radius:18px; background:rgba(0,112,204,.22); border:1px solid rgba(255,255,255,.12); }
-button, select { background:rgba(255,255,255,.16); color:#fff; border:0; padding:10px 14px; border-radius:10px; margin:0 8px 8px 0; cursor:pointer; }
-img { border-radius:12px; }
+.top { padding:28px 48px 12px; font-size:26px; font-weight:600; }
+.list { margin:0 48px; }
+.row { display:flex; align-items:center; gap:14px; padding:10px 16px; border:1px solid transparent; font-size:15px; }
+.row.sel { border-color:#fff; background:rgba(255,255,255,.08); }
+.ico { width:22px; text-align:center; font-family:'Segoe MDL2 Assets'; }
+.row select { background:rgba(255,255,255,.16); color:#fff; border:0; padding:6px 10px; border-radius:6px; margin-left:auto; cursor:pointer; }
+.bar { position:fixed; left:0; right:0; bottom:0; padding:10px 48px; display:flex; gap:28px; background:rgba(0,0,0,.25); font-size:13px; }
 </style>
 </head>
 <body>
-<div class='top'>PS4 - Settings</div>
-<div class='card'><p>Shell theme</p><select onchange='send("setTheme", this.value)'><option value='ps5'>PS5</option><option value='ps4'>PS4</option></select><br><button onclick='send("home")'>Back</button></div>
+<div class='top'>Settings</div>
+<div class='list'>
+<div class='row sel'><span class='ico'>&#xE713;</span><span>Shell theme</span>
+<select onchange='applyTheme(this.value)'><option value='ps5'>PS5</option><option value='ps4'>PS4</option></select>
+</div>
+</div>
+<div class='bar'><span>&#x2715; Enter</span><span>&#x25CB; Back</span></div>
 <script>
 function send(action, value) { if (window.chrome && chrome.webview) { chrome.webview.postMessage(JSON.stringify({ action: action, value: value || '' })); } }
+function applyTheme(v) { send('setTheme', v); setTimeout(function () { location.href = 'settings.html?cmd=settheme&value=' + v; }, 300); }
+var tm = location.search.match(/[?&]theme=(ps4|ps5)/); if (tm) { var sel = document.querySelector('select'); if (sel) sel.value = tm[1]; }
 </script>
 </body>
 </html>
@@ -1248,7 +1251,7 @@ function send(action, value) { if (window.chrome && chrome.webview) { chrome.web
 
 ------------------------------------------------
 FILE: build\publish\data\ui\ps5\settings.html
-SIZE: 1111 bytes
+SIZE: 1363 bytes
 ------------------------------------------------
 <!doctype html>
 <html lang='en'>
@@ -1265,9 +1268,11 @@ img { border-radius:12px; }
 </head>
 <body>
 <div class='top'>PS5 - Settings</div>
-<div class='card'><p>Shell theme</p><select onchange='send("setTheme", this.value)'><option value='ps5'>PS5</option><option value='ps4'>PS4</option></select><br><button onclick='send("home")'>Back</button></div>
+<div class='card'><p>Shell theme</p><select onchange='applyTheme(this.value)'><option value='ps5'>PS5</option><option value='ps4'>PS4</option></select><br><button onclick='send("home")'>Back</button></div>
 <script>
 function send(action, value) { if (window.chrome && chrome.webview) { chrome.webview.postMessage(JSON.stringify({ action: action, value: value || '' })); } }
+function applyTheme(v) { send('setTheme', v); setTimeout(function () { location.href = 'settings.html?cmd=settheme&value=' + v; }, 300); }
+var tm = location.search.match(/[?&]theme=(ps4|ps5)/); if (tm) { var sel = document.querySelector('select'); if (sel) sel.value = tm[1]; }
 </script>
 </body>
 </html>
@@ -1456,7 +1461,7 @@ function send(action, value) { if (window.chrome && chrome.webview) { chrome.web
 
 ------------------------------------------------
 FILE: data\ui\ps4\settings.html
-SIZE: 1109 bytes
+SIZE: 1694 bytes
 ------------------------------------------------
 <!doctype html>
 <html lang='en'>
@@ -1465,17 +1470,27 @@ SIZE: 1109 bytes
 <title>PS4 - Settings</title>
 <style>
 body { margin:0; min-height:100vh; font-family:Segoe UI,Arial; color:#fff; background:linear-gradient(180deg,#00439C,#00265E); }
-.top { padding:18px 24px; font-size:24px; font-weight:600; color:#BBDEFB; }
-.card { margin:0 24px 24px; padding:24px; border-radius:18px; background:rgba(0,112,204,.22); border:1px solid rgba(255,255,255,.12); }
-button, select { background:rgba(255,255,255,.16); color:#fff; border:0; padding:10px 14px; border-radius:10px; margin:0 8px 8px 0; cursor:pointer; }
-img { border-radius:12px; }
+.top { padding:28px 48px 12px; font-size:26px; font-weight:600; }
+.list { margin:0 48px; }
+.row { display:flex; align-items:center; gap:14px; padding:10px 16px; border:1px solid transparent; font-size:15px; }
+.row.sel { border-color:#fff; background:rgba(255,255,255,.08); }
+.ico { width:22px; text-align:center; font-family:'Segoe MDL2 Assets'; }
+.row select { background:rgba(255,255,255,.16); color:#fff; border:0; padding:6px 10px; border-radius:6px; margin-left:auto; cursor:pointer; }
+.bar { position:fixed; left:0; right:0; bottom:0; padding:10px 48px; display:flex; gap:28px; background:rgba(0,0,0,.25); font-size:13px; }
 </style>
 </head>
 <body>
-<div class='top'>PS4 - Settings</div>
-<div class='card'><p>Shell theme</p><select onchange='send("setTheme", this.value)'><option value='ps5'>PS5</option><option value='ps4'>PS4</option></select><br><button onclick='send("home")'>Back</button></div>
+<div class='top'>Settings</div>
+<div class='list'>
+<div class='row sel'><span class='ico'>&#xE713;</span><span>Shell theme</span>
+<select onchange='applyTheme(this.value)'><option value='ps5'>PS5</option><option value='ps4'>PS4</option></select>
+</div>
+</div>
+<div class='bar'><span>&#x2715; Enter</span><span>&#x25CB; Back</span></div>
 <script>
 function send(action, value) { if (window.chrome && chrome.webview) { chrome.webview.postMessage(JSON.stringify({ action: action, value: value || '' })); } }
+function applyTheme(v) { send('setTheme', v); setTimeout(function () { location.href = 'settings.html?cmd=settheme&value=' + v; }, 300); }
+var tm = location.search.match(/[?&]theme=(ps4|ps5)/); if (tm) { var sel = document.querySelector('select'); if (sel) sel.value = tm[1]; }
 </script>
 </body>
 </html>
@@ -1564,7 +1579,7 @@ function send(action, value) { if (window.chrome && chrome.webview) { chrome.web
 
 ------------------------------------------------
 FILE: data\ui\ps5\settings.html
-SIZE: 1111 bytes
+SIZE: 1363 bytes
 ------------------------------------------------
 <!doctype html>
 <html lang='en'>
@@ -1581,9 +1596,11 @@ img { border-radius:12px; }
 </head>
 <body>
 <div class='top'>PS5 - Settings</div>
-<div class='card'><p>Shell theme</p><select onchange='send("setTheme", this.value)'><option value='ps5'>PS5</option><option value='ps4'>PS4</option></select><br><button onclick='send("home")'>Back</button></div>
+<div class='card'><p>Shell theme</p><select onchange='applyTheme(this.value)'><option value='ps5'>PS5</option><option value='ps4'>PS4</option></select><br><button onclick='send("home")'>Back</button></div>
 <script>
 function send(action, value) { if (window.chrome && chrome.webview) { chrome.webview.postMessage(JSON.stringify({ action: action, value: value || '' })); } }
+function applyTheme(v) { send('setTheme', v); setTimeout(function () { location.href = 'settings.html?cmd=settheme&value=' + v; }, 300); }
+var tm = location.search.match(/[?&]theme=(ps4|ps5)/); if (tm) { var sel = document.querySelector('select'); if (sel) sel.value = tm[1]; }
 </script>
 </body>
 </html>
@@ -1617,152 +1634,10 @@ function send(action, value) { if (window.chrome && chrome.webview) { chrome.web
 
 
 ------------------------------------------------
-FILE: result\ConsoleMenu.Wpf.exe.WebView2\EBWebView\AutoLaunchProtocolsComponent\1.0.0.12\manifest.json
-SIZE: 135 bytes
-------------------------------------------------
-{
-    "description" : "AutoLaunch Protocols Preregistration",
-    "name" : "Protocol Preregistration",
-    "version" : "1.0.0.12"
-}
-
-
-------------------------------------------------
-FILE: result\ConsoleMenu.Wpf.exe.WebView2\EBWebView\AutoLaunchProtocolsComponent\1.0.0.12\protocols.json
-SIZE: 3672 bytes
-------------------------------------------------
-{
-  "allow": [
-    {
-      "origins": [
-        "https://.get.microsoft.com",
-        "https://.apps.microsoft.com"
-      ],
-      "protocol": "ms-windows-store"
-    },
-    {
-      "origins": [
-        "https://.onedrive.com",
-        "https://.onedrive.live.com",
-        "https://sharepoint.com"
-      ],
-      "protocol": "ms-word"
-    },
-    {
-      "origins": [
-        "^https://[a-z0-9-]*word-edit\\.officeapps\\.live\\.com/$",
-        "^https://[a-z0-9-]*word-view\\.officeapps\\.live\\.com/$",
-        "^https://[a-z0-9-]*onenote\\.officeapps\\.live\\.com/$",
-        "^https://[a-z0-9-]*eap\\.officeapps\\.live\\.com/$",
-        "^https://[a-z0-9-]*shared\\.officeapps\\.live\\.com/$",
-        "^https://[a-z0-9-]*afhs\\.officeapps\\.live\\.com/$",
-        "^https://[a-z0-9-]*vhs\\.officeapps\\.live\\.com/$",
-        "^https://[a-z0-9-]*optin\\.online\\.office\\.com/$"
-      ],
-      "use_regex": true,
-      "protocol": "ms-word"
-    },
-    {
-      "origins": [
-        "https://.onedrive.com",
-        "https://.onedrive.live.com",
-        "https://sharepoint.com"
-      ],
-      "protocol": "ms-excel"
-    },
-    {
-      "origins": [
-        "^https://[a-z0-9-]*excel\\.officeapps\\.live\\.com/$",
-        "^https://[a-z0-9-]*onenote\\.officeapps\\.live\\.com/$",
-        "^https://[a-z0-9-]*eap\\.officeapps\\.live\\.com/$",
-        "^https://[a-z0-9-]*shared\\.officeapps\\.live\\.com/$",
-        "^https://[a-z0-9-]*afhs\\.officeapps\\.live\\.com/$",
-        "^https://[a-z0-9-]*vhs\\.officeapps\\.live\\.com/$",
-        "^https://[a-z0-9-]*optin\\.online\\.office\\.com/$"
-      ],
-      "use_regex": true,
-      "protocol": "ms-excel"
-    },
-    {
-      "origins": [
-        "https://.onedrive.com",
-        "https://.onedrive.live.com",
-        "https://sharepoint.com"
-      ],
-      "protocol": "ms-powerpoint"
-    },
-    {
-      "origins": [
-        "^https://[a-z0-9-]*powerpoint\\.officeapps\\.live\\.com/$",
-        "^https://[a-z0-9-]*onenote\\.officeapps\\.live\\.com/$",
-        "^https://[a-z0-9-]*eap\\.officeapps\\.live\\.com/$",
-        "^https://[a-z0-9-]*shared\\.officeapps\\.live\\.com/$",
-        "^https://[a-z0-9-]*afhs\\.officeapps\\.live\\.com/$",
-        "^https://[a-z0-9-]*vhs\\.officeapps\\.live\\.com/$",
-        "^https://[a-z0-9-]*optin\\.online\\.office\\.com/$"
-      ],
-      "use_regex": true,
-      "protocol": "ms-powerpoint"
-    },
-    {
-      "origins": [
-        "https://.onedrive.com",
-        "https://.onedrive.live.com",
-        "https://sharepoint.com"
-      ],
-      "protocol": "ms-visio"
-    },
-    {
-      "origins": [
-        "^https://[a-z0-9-]*visio\\.officeapps\\.live\\.com/$",
-        "^https://[a-z0-9-]*onenote\\.officeapps\\.live\\.com/$",
-        "^https://[a-z0-9-]*eap\\.officeapps\\.live\\.com/$",
-        "^https://[a-z0-9-]*shared\\.officeapps\\.live\\.com/$",
-        "^https://[a-z0-9-]*afhs\\.officeapps\\.live\\.com/$",
-        "^https://[a-z0-9-]*vhs\\.officeapps\\.live\\.com/$",
-        "^https://[a-z0-9-]*optin\\.online\\.office\\.com/$"
-      ],
-      "use_regex": true,
-      "protocol": "ms-visio"
-    },
-    {
-      "origins": [
-        "https://www.microsoft.com",
-        "https://copilot.microsoft.com"
-      ],
-      "protocol": "ms-copilot"
-    }
-  ],
-  "warn": [
-    {
-      "origins": [
-        "*"
-      ],
-      "protocol": "ms-test-warn"
-    }
-  ],
-  "block": [
-    {
-      "origins": [
-        "*"
-      ],
-      "protocol": "ms-test-block"
-    },
-    {
-      "origins": [
-        "*"
-      ],
-      "protocol": "applescript"
-    }
-  ]
-}
-
-
-------------------------------------------------
 FILE: result\ConsoleMenu.Wpf.exe.WebView2\EBWebView\component_crx_cache\metadata.json
-SIZE: 236 bytes
+SIZE: 13 bytes
 ------------------------------------------------
-{"hashes":{"95fd9d48e4fc245a3f3a99a3a16ecd1355050ba3f4afc555f19a97c7f9b49677":{"appid":"ohckeflnhegojcjlcpbfpciadgikcohk"},"cde4f808f038aaffece9680c0356ded00c81c4559e0a431acb45d1276425d9eb":{"appid":"eeobbhfgfagbclfofmgbdfoicabjdbkn"}}}
+{"hashes":{}}
 
 
 ------------------------------------------------
@@ -1770,13 +1645,6 @@ FILE: result\ConsoleMenu.Wpf.exe.WebView2\EBWebView\extensions_crx_cache\metadat
 SIZE: 13 bytes
 ------------------------------------------------
 {"hashes":{}}
-
-
-------------------------------------------------
-FILE: result\ConsoleMenu.Wpf.exe.WebView2\EBWebView\OriginTrials\0.0.1.7\manifest.json
-SIZE: 43 bytes
-------------------------------------------------
-{"version": "0.0.1.7", "origin-trials": {}}
 
 
 ------------------------------------------------
@@ -1795,7 +1663,7 @@ SIZE: 223 bytes
 {
   "Profiles": [
     {
-      "Id": "153bed48be7341fcb01330783049559d",
+      "Id": "0f8a85b4ce6742e3acc5eac452d910f1",
       "Name": "Default",
       "AvatarPath": "",
       "FavoriteGameIds": [],
@@ -1811,7 +1679,7 @@ FILE: result\data\settings.json
 SIZE: 240 bytes
 ------------------------------------------------
 {
-  "Theme": "ps5",
+  "Theme": "ps4",
   "InstallDirectory": "C:\\Users\\290-23\\Desktop\\console\\console-menu\\result\\data\\installs",
   "OverlayHotKey": "Ctrl\u002BShift\u002BM",
   "EnableBoost": true,
@@ -1943,7 +1811,7 @@ function send(action, value) { if (window.chrome && chrome.webview) { chrome.web
 
 ------------------------------------------------
 FILE: result\data\ui\ps4\settings.html
-SIZE: 1109 bytes
+SIZE: 1694 bytes
 ------------------------------------------------
 <!doctype html>
 <html lang='en'>
@@ -1952,17 +1820,27 @@ SIZE: 1109 bytes
 <title>PS4 - Settings</title>
 <style>
 body { margin:0; min-height:100vh; font-family:Segoe UI,Arial; color:#fff; background:linear-gradient(180deg,#00439C,#00265E); }
-.top { padding:18px 24px; font-size:24px; font-weight:600; color:#BBDEFB; }
-.card { margin:0 24px 24px; padding:24px; border-radius:18px; background:rgba(0,112,204,.22); border:1px solid rgba(255,255,255,.12); }
-button, select { background:rgba(255,255,255,.16); color:#fff; border:0; padding:10px 14px; border-radius:10px; margin:0 8px 8px 0; cursor:pointer; }
-img { border-radius:12px; }
+.top { padding:28px 48px 12px; font-size:26px; font-weight:600; }
+.list { margin:0 48px; }
+.row { display:flex; align-items:center; gap:14px; padding:10px 16px; border:1px solid transparent; font-size:15px; }
+.row.sel { border-color:#fff; background:rgba(255,255,255,.08); }
+.ico { width:22px; text-align:center; font-family:'Segoe MDL2 Assets'; }
+.row select { background:rgba(255,255,255,.16); color:#fff; border:0; padding:6px 10px; border-radius:6px; margin-left:auto; cursor:pointer; }
+.bar { position:fixed; left:0; right:0; bottom:0; padding:10px 48px; display:flex; gap:28px; background:rgba(0,0,0,.25); font-size:13px; }
 </style>
 </head>
 <body>
-<div class='top'>PS4 - Settings</div>
-<div class='card'><p>Shell theme</p><select onchange='send("setTheme", this.value)'><option value='ps5'>PS5</option><option value='ps4'>PS4</option></select><br><button onclick='send("home")'>Back</button></div>
+<div class='top'>Settings</div>
+<div class='list'>
+<div class='row sel'><span class='ico'>&#xE713;</span><span>Shell theme</span>
+<select onchange='applyTheme(this.value)'><option value='ps5'>PS5</option><option value='ps4'>PS4</option></select>
+</div>
+</div>
+<div class='bar'><span>&#x2715; Enter</span><span>&#x25CB; Back</span></div>
 <script>
 function send(action, value) { if (window.chrome && chrome.webview) { chrome.webview.postMessage(JSON.stringify({ action: action, value: value || '' })); } }
+function applyTheme(v) { send('setTheme', v); setTimeout(function () { location.href = 'settings.html?cmd=settheme&value=' + v; }, 300); }
+var tm = location.search.match(/[?&]theme=(ps4|ps5)/); if (tm) { var sel = document.querySelector('select'); if (sel) sel.value = tm[1]; }
 </script>
 </body>
 </html>
@@ -2051,7 +1929,7 @@ function send(action, value) { if (window.chrome && chrome.webview) { chrome.web
 
 ------------------------------------------------
 FILE: result\data\ui\ps5\settings.html
-SIZE: 1111 bytes
+SIZE: 1363 bytes
 ------------------------------------------------
 <!doctype html>
 <html lang='en'>
@@ -2068,9 +1946,11 @@ img { border-radius:12px; }
 </head>
 <body>
 <div class='top'>PS5 - Settings</div>
-<div class='card'><p>Shell theme</p><select onchange='send("setTheme", this.value)'><option value='ps5'>PS5</option><option value='ps4'>PS4</option></select><br><button onclick='send("home")'>Back</button></div>
+<div class='card'><p>Shell theme</p><select onchange='applyTheme(this.value)'><option value='ps5'>PS5</option><option value='ps4'>PS4</option></select><br><button onclick='send("home")'>Back</button></div>
 <script>
 function send(action, value) { if (window.chrome && chrome.webview) { chrome.webview.postMessage(JSON.stringify({ action: action, value: value || '' })); } }
+function applyTheme(v) { send('setTheme', v); setTimeout(function () { location.href = 'settings.html?cmd=settheme&value=' + v; }, 300); }
+var tm = location.search.match(/[?&]theme=(ps4|ps5)/); if (tm) { var sel = document.querySelector('select'); if (sel) sel.value = tm[1]; }
 </script>
 </body>
 </html>
@@ -3530,7 +3410,7 @@ namespace ConsoleMenu.Wpf.Views { public partial class Ps5ShellView : ShellViewB
 
 ------------------------------------------------
 FILE: src\ConsoleMenu.Wpf\Views\ShellViewBase.cs
-SIZE: 19737 bytes
+SIZE: 21700 bytes
 ------------------------------------------------
 using System;
 using System.Collections.Generic;
@@ -3766,7 +3646,12 @@ namespace ConsoleMenu.Wpf.Views
             {
                 if (web.CoreWebView2 == null) await web.EnsureCoreWebView2Async();
                 if (web.CoreWebView2 == null) { ShowWebFallback(); return; }
-                if (!_webHooked) { web.CoreWebView2.WebMessageReceived += CoreWebView2_WebMessageReceived; _webHooked = true; }
+                if (!_webHooked)
+                {
+                    web.CoreWebView2.WebMessageReceived += CoreWebView2_WebMessageReceived;
+                    web.CoreWebView2.NavigationStarting += CoreWebView2_NavigationStarting;
+                    _webHooked = true;
+                }
                 NavigateCore(page);
             }
             catch { ShowWebFallback(); }
@@ -3775,8 +3660,14 @@ namespace ConsoleMenu.Wpf.Views
         {
             var web = Find<WebView2>("ShellWebView"); if (web == null || web.CoreWebView2 == null) return;
             var path = Path.Combine(App.DataDirectory, "ui", ThemeName, page);
-            if (File.Exists(path)) web.CoreWebView2.Navigate(new Uri(path).AbsoluteUri);
+            if (File.Exists(path)) web.CoreWebView2.Navigate(NavigateUri(path, page));
             else web.CoreWebView2.NavigateToString("<html><body style='margin:0;min-height:100vh;display:grid;place-items:center;background:#000;color:#fff'>" + page + " not found</body></html>");
+        }
+        private string NavigateUri(string path, string page)
+        {
+            var uri = new Uri(path).AbsoluteUri;
+            if (string.Equals(page, "settings.html", StringComparison.OrdinalIgnoreCase)) uri += "?theme=" + Uri.EscapeDataString(ShellDataService.Settings == null ? "ps5" : ShellDataService.Settings.Theme);
+            return uri;
         }
         private void ShowWebFallback() { var web = Find<WebView2>("ShellWebView"); if (web != null) web.Visibility = Visibility.Collapsed; var fallback = Find<Border>("WebFallback"); if (fallback != null) fallback.Visibility = Visibility.Visible; }
         private void OpenBrowser_Click(object sender, RoutedEventArgs e) { var page = _currentPage ?? "store.html"; var path = Path.Combine(App.DataDirectory, "ui", ThemeName, page); if (!File.Exists(path)) return; try { Process.Start(new ProcessStartInfo { FileName = path, UseShellExecute = true }); } catch { } }
@@ -3785,6 +3676,42 @@ namespace ConsoleMenu.Wpf.Views
         private void CloseWindow() { var window = GetWindow(); if (window != null) window.Close(); }
         private void InstallLatestRelease() { _ = InstallLatestReleaseAsync(); }
         private async Task InstallLatestReleaseAsync() { try { var result = await ShellDataService.InstallLatestReleaseAsync(); ShowToast(result); RefreshGames(); } catch (Exception ex) { ShowToast("Install error: " + ex.Message); } }
+        private void ApplyThemeDeferred()
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                try
+                {
+                    var mw = GetWindow() as MainWindow;
+                    if (mw != null) mw.ApplyTheme();
+                }
+                catch (Exception ex) { ShowToast("Theme apply error: " + ex.Message); }
+            }));
+        }
+        private void ApplyThemeValue(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value)) return;
+            ShellDataService.Settings.Theme = value;
+            ShellDataService.SaveSettings();
+            ApplyThemeDeferred();
+        }
+        private void CoreWebView2_NavigationStarting(object sender, CoreWebView2NavigationStartingEventArgs e)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(e.Uri)) return;
+                var uri = new Uri(e.Uri);
+                if (!uri.IsAbsoluteUri || !uri.IsFile) return;
+                var query = uri.Query;
+                if (string.IsNullOrEmpty(query) || query.IndexOf("cmd=settheme", StringComparison.OrdinalIgnoreCase) < 0) return;
+                e.Cancel = true;
+                var value = string.Empty;
+                var idx = query.IndexOf("value=", StringComparison.OrdinalIgnoreCase);
+                if (idx >= 0) value = Uri.UnescapeDataString(query.Substring(idx + 6).Split('&')[0]);
+                ApplyThemeValue(value);
+            }
+            catch (Exception ex) { ShowToast("Nav error: " + ex.Message); }
+        }
         private void CoreWebView2_WebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
         {
             try
@@ -3804,14 +3731,14 @@ namespace ConsoleMenu.Wpf.Views
                     case "launchselected": Launch_Click(null, null); break;
                     case "installlatest": InstallLatestRelease(); break;
                     case "refreshgames": RefreshGames(); break;
-                    case "settheme": if (!string.IsNullOrWhiteSpace(message.Value)) { ShellDataService.Settings.Theme = message.Value; ShellDataService.SaveSettings(); var mw = GetWindow() as MainWindow; if (mw != null) mw.ApplyTheme(); } break;
+                    case "settheme": ApplyThemeValue(message.Value); break;
                     case "addprofile": if (!string.IsNullOrWhiteSpace(message.Value)) { ShellDataService.Profiles.Profiles.Add(new ProfileEntry { Name = message.Value }); ShellDataService.SaveProfiles(); RefreshProfile(); } break;
                 }
             }
-            catch { }
+            catch (Exception ex) { ShowToast("Web message error: " + ex.Message); }
         }
-        private class WebMessage { [JsonPropertyName("action")] public string Action { get; set; } [JsonPropertyName("value")] public string Value { get; set; } }
     }
+    public sealed class WebMessage { [JsonPropertyName("action")] public string Action { get; set; } [JsonPropertyName("value")] public string Value { get; set; } }
     public sealed class NotEmptyToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type t, object p, CultureInfo c) { return string.IsNullOrWhiteSpace(value as string) ? Visibility.Collapsed : Visibility.Visible; }
@@ -3860,6 +3787,6 @@ namespace ConsoleMenu.Wpf.Views
 }
 
 ==================== SUMMARY ====================
-  Source files : 77
+  Source files : 74
   Report file  : console-menu_report.txt
 ================================================================

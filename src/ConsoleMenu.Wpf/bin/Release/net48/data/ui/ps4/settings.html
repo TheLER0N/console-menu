@@ -5,17 +5,27 @@
 <title>PS4 - Settings</title>
 <style>
 body { margin:0; min-height:100vh; font-family:Segoe UI,Arial; color:#fff; background:linear-gradient(180deg,#00439C,#00265E); }
-.top { padding:18px 24px; font-size:24px; font-weight:600; color:#BBDEFB; }
-.card { margin:0 24px 24px; padding:24px; border-radius:18px; background:rgba(0,112,204,.22); border:1px solid rgba(255,255,255,.12); }
-button, select { background:rgba(255,255,255,.16); color:#fff; border:0; padding:10px 14px; border-radius:10px; margin:0 8px 8px 0; cursor:pointer; }
-img { border-radius:12px; }
+.top { padding:28px 48px 12px; font-size:26px; font-weight:600; }
+.list { margin:0 48px; }
+.row { display:flex; align-items:center; gap:14px; padding:10px 16px; border:1px solid transparent; font-size:15px; }
+.row.sel { border-color:#fff; background:rgba(255,255,255,.08); }
+.ico { width:22px; text-align:center; font-family:'Segoe MDL2 Assets'; }
+.row select { background:rgba(255,255,255,.16); color:#fff; border:0; padding:6px 10px; border-radius:6px; margin-left:auto; cursor:pointer; }
+.bar { position:fixed; left:0; right:0; bottom:0; padding:10px 48px; display:flex; gap:28px; background:rgba(0,0,0,.25); font-size:13px; }
 </style>
 </head>
 <body>
-<div class='top'>PS4 - Settings</div>
-<div class='card'><p>Shell theme</p><select onchange='send("setTheme", this.value)'><option value='ps5'>PS5</option><option value='ps4'>PS4</option></select><br><button onclick='send("home")'>Back</button></div>
+<div class='top'>Settings</div>
+<div class='list'>
+<div class='row sel'><span class='ico'>&#xE713;</span><span>Shell theme</span>
+<select onchange='applyTheme(this.value)'><option value='ps5'>PS5</option><option value='ps4'>PS4</option></select>
+</div>
+</div>
+<div class='bar'><span>&#x2715; Enter</span><span>&#x25CB; Back</span></div>
 <script>
 function send(action, value) { if (window.chrome && chrome.webview) { chrome.webview.postMessage(JSON.stringify({ action: action, value: value || '' })); } }
+function applyTheme(v) { send('setTheme', v); setTimeout(function () { location.href = 'settings.html?cmd=settheme&value=' + v; }, 300); }
+var tm = location.search.match(/[?&]theme=(ps4|ps5)/); if (tm) { var sel = document.querySelector('select'); if (sel) sel.value = tm[1]; }
 </script>
 </body>
 </html>

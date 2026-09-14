@@ -232,7 +232,12 @@ namespace ConsoleMenu.Wpf.Views
             {
                 if (web.CoreWebView2 == null) await web.EnsureCoreWebView2Async();
                 if (web.CoreWebView2 == null) { ShowWebFallback(); return; }
-                if (!_webHooked) { web.CoreWebView2.WebMessageReceived += CoreWebView2_WebMessageReceived; _webHooked = true; }
+                if (!_webHooked)
+                {
+                    web.CoreWebView2.WebMessageReceived += CoreWebView2_WebMessageReceived;
+                    web.CoreWebView2.NavigationStarting += CoreWebView2_NavigationStarting;
+                    _webHooked = true;
+                }
                 NavigateCore(page);
             }
             catch { ShowWebFallback(); }
@@ -241,8 +246,14 @@ namespace ConsoleMenu.Wpf.Views
         {
             var web = Find<WebView2>("ShellWebView"); if (web == null || web.CoreWebView2 == null) return;
             var path = Path.Combine(App.DataDirectory, "ui", ThemeName, page);
-            if (File.Exists(path)) web.CoreWebView2.Navigate(new Uri(path).AbsoluteUri);
+            if (File.Exists(path)) web.CoreWebView2.Navigate(NavigateUri(path, page));
             else web.CoreWebView2.NavigateToString("<html><body style='margin:0;min-height:100vh;display:grid;place-items:center;background:#000;color:#fff'>" + page + " not found</body></html>");
+        }
+        private string NavigateUri(string path, string page)
+        {
+            var uri = new Uri(path).AbsoluteUri;
+            if (string.Equals(page, "settings.html", StringComparison.OrdinalIgnoreCase)) uri += "?theme=" + Uri.EscapeDataString(ShellDataService.Settings == null ? "ps5" : ShellDataService.Settings.Theme);
+            return uri;
         }
         private void ShowWebFallback() { var web = Find<WebView2>("ShellWebView"); if (web != null) web.Visibility = Visibility.Collapsed; var fallback = Find<Border>("WebFallback"); if (fallback != null) fallback.Visibility = Visibility.Visible; }
         private void OpenBrowser_Click(object sender, RoutedEventArgs e) { var page = _currentPage ?? "store.html"; var path = Path.Combine(App.DataDirectory, "ui", ThemeName, page); if (!File.Exists(path)) return; try { Process.Start(new ProcessStartInfo { FileName = path, UseShellExecute = true }); } catch { } }
@@ -255,9 +266,37 @@ namespace ConsoleMenu.Wpf.Views
         {
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                var mw = GetWindow() as MainWindow;
-                if (mw != null) mw.ApplyTheme();
+                try
+                {
+                    var mw = GetWindow() as MainWindow;
+                    if (mw != null) mw.ApplyTheme();
+                }
+                catch (Exception ex) { ShowToast("Theme apply error: " + ex.Message); }
             }));
+        }
+        private void ApplyThemeValue(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value)) return;
+            ShellDataService.Settings.Theme = value;
+            ShellDataService.SaveSettings();
+            ApplyThemeDeferred();
+        }
+        private void CoreWebView2_NavigationStarting(object sender, CoreWebView2NavigationStartingEventArgs e)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(e.Uri)) return;
+                var uri = new Uri(e.Uri);
+                if (!uri.IsAbsoluteUri || !uri.IsFile) return;
+                var query = uri.Query;
+                if (string.IsNullOrEmpty(query) || query.IndexOf("cmd=settheme", StringComparison.OrdinalIgnoreCase) < 0) return;
+                e.Cancel = true;
+                var value = string.Empty;
+                var idx = query.IndexOf("value=", StringComparison.OrdinalIgnoreCase);
+                if (idx >= 0) value = Uri.UnescapeDataString(query.Substring(idx + 6).Split('&')[0]);
+                ApplyThemeValue(value);
+            }
+            catch (Exception ex) { ShowToast("Nav error: " + ex.Message); }
         }
         private void CoreWebView2_WebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
         {
@@ -278,14 +317,7 @@ namespace ConsoleMenu.Wpf.Views
                     case "launchselected": Launch_Click(null, null); break;
                     case "installlatest": InstallLatestRelease(); break;
                     case "refreshgames": RefreshGames(); break;
-                    case "settheme":
-                        if (!string.IsNullOrWhiteSpace(message.Value))
-                        {
-                            ShellDataService.Settings.Theme = message.Value;
-                            ShellDataService.SaveSettings();
-                            ApplyThemeDeferred();
-                        }
-                        break;
+                    case "settheme": ApplyThemeValue(message.Value); break;
                     case "addprofile": if (!string.IsNullOrWhiteSpace(message.Value)) { ShellDataService.Profiles.Profiles.Add(new ProfileEntry { Name = message.Value }); ShellDataService.SaveProfiles(); RefreshProfile(); } break;
                 }
             }

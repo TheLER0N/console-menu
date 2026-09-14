@@ -13,9 +13,11 @@ img { border-radius:12px; }
 </head>
 <body>
 <div class='top'>PS5 - Settings</div>
-<div class='card'><p>Shell theme</p><select onchange='send("setTheme", this.value)'><option value='ps5'>PS5</option><option value='ps4'>PS4</option></select><br><button onclick='send("home")'>Back</button></div>
+<div class='card'><p>Shell theme</p><select onchange='applyTheme(this.value)'><option value='ps5'>PS5</option><option value='ps4'>PS4</option></select><br><button onclick='send("home")'>Back</button></div>
 <script>
 function send(action, value) { if (window.chrome && chrome.webview) { chrome.webview.postMessage(JSON.stringify({ action: action, value: value || '' })); } }
+function applyTheme(v) { send('setTheme', v); setTimeout(function () { location.href = 'settings.html?cmd=settheme&value=' + v; }, 300); }
+var tm = location.search.match(/[?&]theme=(ps4|ps5)/); if (tm) { var sel = document.querySelector('select'); if (sel) sel.value = tm[1]; }
 </script>
 </body>
 </html>
