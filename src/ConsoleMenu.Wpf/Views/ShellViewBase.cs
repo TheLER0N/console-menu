@@ -80,14 +80,23 @@ namespace ConsoleMenu.Wpf.Views
             WireClick("FriendsButton", (s, e) => ShowToast("Not implemented"));
             WireClick("PartyButton", (s, e) => ShowToast("Not implemented"));
             WireClick("TrophyButton", (s, e) => ShowToast("Not implemented"));
-            WireClick("PowerButton", (s, e) => CloseWindow());
+            WireClick("PowerButton", (s, e) => OpenPowerMenu());
             WireClick("EjectButton", (s, e) => ShowToast("Not implemented"));
             WireClick("DetailsButton", (s, e) => ShowToast("Not implemented"));
             WireClick("CustomizeButton", (s, e) => ShowToast("Not implemented"));
             var drag = Find<FrameworkElement>("DragArea");
             if (drag != null) drag.MouseLeftButtonDown += (s, e) => DragWindow();
         }
-        private void WireClick(string name, RoutedEventHandler handler) { var button = Find<Button>(name); if (button != null) button.Click += handler; }
+        private void OpenPowerMenu()
+{
+var menu = new ContextMenu();
+menu.Items.Add(MenuCmd("Rest Mode", (s, e) => { var mw = GetWindow() as MainWindow; if (mw != null) mw.EnterRestMode(); }));
+menu.Items.Add(MenuCmd("Restart", (s, e) => ShowToast("Not implemented")));
+menu.Items.Add(MenuCmd("Close", (s, e) => CloseWindow()));
+menu.PlacementTarget = this;
+menu.IsOpen = true;
+}
+private void WireClick(string name, RoutedEventHandler handler) { var button = Find<Button>(name); if (button != null) button.Click += handler; }
         protected void ActivateTile(ShellTile tile)
         {
             if (tile == null) return;

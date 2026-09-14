@@ -1,0 +1,9 @@
+﻿bin/
+obj/
+build/
+result/
+.vs/
+.vscode/
+*.user
+*.suo
+console-menu_report.txt
