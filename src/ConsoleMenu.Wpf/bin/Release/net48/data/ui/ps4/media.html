@@ -1,0 +1,21 @@
+﻿<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>PS4 - Media</title>
+<style>
+body { margin:0; min-height:100vh; font-family:Segoe UI,Arial; color:#fff; background:linear-gradient(180deg,#00439C,#00265E); }
+.top { padding:18px 24px; font-size:24px; font-weight:600; color:#BBDEFB; }
+.card { margin:0 24px 24px; padding:24px; border-radius:18px; background:rgba(0,112,204,.22); border:1px solid rgba(255,255,255,.12); }
+button, select { background:rgba(255,255,255,.16); color:#fff; border:0; padding:10px 14px; border-radius:10px; margin:0 8px 8px 0; cursor:pointer; }
+img { border-radius:12px; }
+</style>
+</head>
+<body>
+<div class='top'>PS4 - Media</div>
+<div class='card'><p>Media placeholders in data/media/placeholders.</p><img style='width:320px;height:180px' src='../../media/placeholders/cover.svg'><br><button onclick='send("home")'>Back</button></div>
+<script>
+function send(action, value) { if (window.chrome && chrome.webview) { chrome.webview.postMessage(JSON.stringify({ action: action, value: value || '' })); } }
+</script>
+</body>
+</html>

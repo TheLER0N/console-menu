@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Users\Пользователь\Desktop\console-menu\src\ConsoleMenu.Wpf\obj\Debug\net48\
+C:\Users\290-23\Desktop\console\console-menu\src\ConsoleMenu.Wpf\obj\Debug\net48\
 ConsoleMenu.Wpf
 none
 false
-TRACE;DEBUG;NETFRAMEWORK;NET48;NET30_OR_GREATER;NET35_OR_GREATER;NET40_OR_GREATER;NET45_OR_GREATER;NET451_OR_GREATER;NET452_OR_GREATER;NET46_OR_GREATER;NET461_OR_GREATER;NET462_OR_GREATER;NET47_OR_GREATER;NET471_OR_GREATER;NET472_OR_GREATER;NET48_OR_GREATER
-C:\Users\Пользователь\Desktop\console-menu\src\ConsoleMenu.Wpf\App.xaml
+TRACE;DEBUG;NETFRAMEWORK;NET48;
+C:\Users\290-23\Desktop\console\console-menu\src\ConsoleMenu.Wpf\App.xaml
 7472290020
-1-2019670779
+11082422690
 10409261432
-35-885920120
+35-1686190746
 MainWindow.xaml;OverlayWindow.xaml;SplashWindow.xaml;Themes\PS4.xaml;Themes\PS5.xaml;Views\Ps4ShellView.xaml;Views\Ps5ShellView.xaml;
 
 False

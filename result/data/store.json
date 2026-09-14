@@ -1,0 +1,10 @@
+{
+  "Entries": [
+    {
+      "Repo": "YOUR_GITHUB_USER/YOUR_REPO",
+      "ReleaseMode": "latest",
+      "AssetPattern": "*.zip",
+      "PagePath": "store-page.html"
+    }
+  ]
+}
