@@ -1,214 +1,147 @@
 ﻿<views:ShellViewBase x:Class="ConsoleMenu.Wpf.Views.Ps4ShellView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:views="clr-namespace:ConsoleMenu.Wpf.Views"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
-             Background="Transparent">
-    <views:ShellViewBase.Resources>
-        <views:NotEmptyToVisibilityConverter x:Key="NotEmptyVis"/>
-        <views:EmptyToVisibilityConverter x:Key="EmptyVis"/>
-        <views:HashToBrushConverter x:Key="HashBrush"/>
-        <views:InitialsConverter x:Key="Initials"/>
-    </views:ShellViewBase.Resources>
-    <Grid>
-        <Grid.Background>
-            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                <GradientStop Color="#00439C" Offset="0"/>
-                <GradientStop Color="#00265E" Offset="1"/>
-            </LinearGradientBrush>
-        </Grid.Background>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="52"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="220"/>
-            <RowDefinition Height="40"/>
-        </Grid.RowDefinitions>
-        <Ellipse Grid.RowSpan="4" Width="1600" Height="1600" Stroke="#0CFFFFFF" StrokeThickness="120"
-                 HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-620,-420,0,0" IsHitTestVisible="False"/>
-        <Rectangle Grid.RowSpan="4" Height="300" VerticalAlignment="Bottom" IsHitTestVisible="False">
-            <Rectangle.Fill>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#00000814" Offset="0"/>
-                    <GradientStop Color="#AA000814" Offset="1"/>
-                </LinearGradientBrush>
-            </Rectangle.Fill>
-        </Rectangle>
-        <Grid x:Name="DragArea" Grid.Row="0" Background="Transparent">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="28,0,0,0" VerticalAlignment="Center">
-                <TextBlock Text="+" FontSize="26" FontWeight="Bold" Foreground="#E3C93E" Margin="0,0,24,0"/>
-                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE783;" FontSize="20" Foreground="White"/>
-            </StackPanel>
-            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE77B;" FontSize="20" Foreground="White" Margin="0,0,24,0"/>
-                <Ellipse Width="30" Height="30" Fill="#9FB3D1" Margin="0,0,8,0"/>
-                <TextBlock x:Name="ProfileNameText" Text="User" Foreground="White" FontSize="15" VerticalAlignment="Center"/>
-            </StackPanel>
-            <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="0,0,28,0" VerticalAlignment="Center">
-                <Path Stroke="White" StrokeThickness="1.4" Fill="White" Width="18" Height="18" Stretch="Uniform" Margin="0,0,6,0"
-                      Data="M4,1 h12 v5 a6,6 0 0 1 -12,0 z M9,12 h2 v3 h-2 z M6,16 h8 v2 h-8 z"/>
-                <Border Background="#E3C93E" CornerRadius="8" Width="16" Height="16" Margin="0,0,28,0">
-                    <TextBlock Text="14" FontSize="9" Foreground="#111111" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                </Border>
-                <TextBlock x:Name="ClockText" FontSize="16" Foreground="White" VerticalAlignment="Center"/>
-            </StackPanel>
-            <Rectangle Height="1" Fill="#22FFFFFF" VerticalAlignment="Bottom"/>
-        </Grid>
-        <Grid Grid.Row="1">
-            <Grid x:Name="HomePanel">
-                <Grid Margin="24,60,24,0" VerticalAlignment="Top">
-                    <ListBox x:Name="GamesList" HorizontalAlignment="Left" VerticalAlignment="Top"
-                             Background="Transparent" BorderThickness="0"
-                             ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                        <ListBox.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate></ListBox.ItemsPanel>
-                        <ListBox.ItemContainerStyle>
-                            <Style TargetType="ListBoxItem">
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="ListBoxItem">
-                                            <Border x:Name="Bd" Width="190" Height="190" BorderThickness="3" BorderBrush="#00FFFFFF"
-                                                    RenderTransformOrigin="0.5,0.5" Background="Transparent">
-                                                <Grid>
-                                                    <ContentPresenter/>
-                                                    <Border x:Name="StartBar" Visibility="Collapsed" VerticalAlignment="Bottom" Height="34" Background="#CC003087">
-                                                        <TextBlock Text="Start" Foreground="White" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                    </Border>
-                                                </Grid>
-                                            </Border>
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="IsSelected" Value="True">
-                                                    <Setter TargetName="Bd" Property="BorderBrush" Value="#FFFFFFFF"/>
-                                                    <Setter TargetName="StartBar" Property="Visibility" Value="Visible"/>
-                                                    <Setter TargetName="Bd" Property="RenderTransform">
-                                                        <Setter.Value><ScaleTransform ScaleX="1.12" ScaleY="1.12"/></Setter.Value>
-                                                    </Setter>
-                                                    <Setter TargetName="Bd" Property="Effect">
-                                                        <Setter.Value><DropShadowEffect ShadowDepth="0" BlurRadius="16" Color="#7FD4FF" Opacity="0.7"/></Setter.Value>
-                                                    </Setter>
-                                                </Trigger>
-                                            </ControlTemplate.Triggers>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </ListBox.ItemContainerStyle>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Border Width="184" Height="184">
-                                    <Grid>
-                                        <Image Source="{Binding CoverPath}" Stretch="UniformToFill"
-                                               Visibility="{Binding CoverPath, Converter={StaticResource NotEmptyVis}}"/>
-                                        <Grid Visibility="{Binding CoverPath, Converter={StaticResource EmptyVis}}">
-                                            <Rectangle Fill="{Binding Title, Converter={StaticResource HashBrush}}"/>
-                                            <TextBlock Text="{Binding Title, Converter={StaticResource Initials}}" FontSize="54" FontWeight="Bold"
-                                                       Foreground="#DDFFFFFF" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        </Grid>
-                                        <Border VerticalAlignment="Bottom" Background="#99000000" Padding="6,3">
-                                            <TextBlock Text="{Binding Title}" FontSize="12" Foreground="White" TextTrimming="CharacterEllipsis"/>
-                                        </Border>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                    <TextBlock x:Name="HeroTitle" Text="" FontSize="40" FontWeight="Light" Foreground="#FFFFFF"
-                               HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0"/>
-                </Grid>
-            </Grid>
-            <Grid x:Name="WebPanel" Visibility="Collapsed">
-                <wv2:WebView2 x:Name="ShellWebView"/>
-                <Border x:Name="WebFallback" Visibility="Collapsed" Background="#26FFFFFF">
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <TextBlock Text="WebView2 unavailable" FontSize="22" Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,10"/>
-                        <Button x:Name="OpenBrowserButton" Content="Open in browser" HorizontalAlignment="Center"/>
-                    </StackPanel>
-                </Border>
-            </Grid>
-        </Grid>
-        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-            <UniformGrid Columns="3" VerticalAlignment="Top" Margin="24,8,24,8">
-                <Border Background="#D8DBE0" Margin="8" Height="90">
-                    <Grid Margin="10">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
-                            <Rectangle Width="28" Height="28" Fill="#8899AA"/>
-                            <Rectangle Width="28" Height="28" Fill="#556677" Margin="4,0,0,0"/>
-                        </StackPanel>
-                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE7FC;" Foreground="#555555" HorizontalAlignment="Right" VerticalAlignment="Top"/>
-                        <TextBlock VerticalAlignment="Bottom" TextWrapping="Wrap" FontSize="13" Foreground="#333333"><Run Foreground="#006BA8" FontWeight="SemiBold">Daniel Donizetti</Run><Run xml:space="preserve"> played </Run><Run FontWeight="SemiBold">RESOGUN</Run><Run>.</Run></TextBlock>
-                    </Grid>
-                </Border>
-                <Border Background="#D8DBE0" Margin="8" Height="90">
-                    <Grid Margin="10">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
-                            <Rectangle Width="28" Height="28" Fill="#776688"/>
-                            <Rectangle Width="28" Height="28" Fill="#445566" Margin="4,0,0,0"/>
-                        </StackPanel>
-                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE7FC;" Foreground="#555555" HorizontalAlignment="Right" VerticalAlignment="Top"/>
-                        <TextBlock VerticalAlignment="Bottom" TextWrapping="Wrap" FontSize="13" Foreground="#333333"><Run Foreground="#006BA8" FontWeight="SemiBold">Lukaz souza</Run><Run xml:space="preserve"> played </Run><Run FontWeight="SemiBold">Killzone Shadow Fall</Run><Run>.</Run></TextBlock>
-                    </Grid>
-                </Border>
-                <Border Background="#D8DBE0" Margin="8" Height="90">
-                    <Grid Margin="10">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
-                            <Rectangle Width="28" Height="28" Fill="#99AA88"/>
-                            <Rectangle Width="28" Height="28" Fill="#667755" Margin="4,0,0,0"/>
-                        </StackPanel>
-                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE7FC;" Foreground="#555555" HorizontalAlignment="Right" VerticalAlignment="Top"/>
-                        <TextBlock VerticalAlignment="Bottom" TextWrapping="Wrap" FontSize="13" Foreground="#333333"><Run Foreground="#006BA8" FontWeight="SemiBold">victorgomes1</Run><Run xml:space="preserve"> played </Run><Run FontWeight="SemiBold">FIFA 14</Run><Run>.</Run></TextBlock>
-                    </Grid>
-                </Border>
-                <Border Background="#D8DBE0" Margin="8" Height="90">
-                    <Grid Margin="10">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
-                            <Rectangle Width="28" Height="28" Fill="#AA8877"/>
-                            <Rectangle Width="28" Height="28" Fill="#775544" Margin="4,0,0,0"/>
-                        </StackPanel>
-                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE7FC;" Foreground="#555555" HorizontalAlignment="Right" VerticalAlignment="Top"/>
-                        <TextBlock VerticalAlignment="Bottom" TextWrapping="Wrap" FontSize="13" Foreground="#333333"><Run Foreground="#006BA8" FontWeight="SemiBold">Rick Ricardo</Run><Run xml:space="preserve"> played </Run><Run FontWeight="SemiBold">BATTLEFIELD 4</Run><Run>.</Run></TextBlock>
-                    </Grid>
-                </Border>
-                <Border Background="#D8DBE0" Margin="8" Height="90">
-                    <Grid Margin="10">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
-                            <Rectangle Width="28" Height="28" Fill="#8899BB"/>
-                            <Rectangle Width="28" Height="28" Fill="#556688" Margin="4,0,0,0"/>
-                        </StackPanel>
-                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE7FC;" Foreground="#555555" HorizontalAlignment="Right" VerticalAlignment="Top"/>
-                        <TextBlock VerticalAlignment="Bottom" TextWrapping="Wrap" FontSize="13" Foreground="#333333"><Run Foreground="#006BA8" FontWeight="SemiBold">Lukaz souza</Run><Run xml:space="preserve"> played </Run><Run FontWeight="SemiBold">ASSASSIN'S CREED IV</Run><Run>.</Run></TextBlock>
-                    </Grid>
-                </Border>
-                <Border Background="#D8DBE0" Margin="8" Height="90">
-                    <Grid Margin="10">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
-                            <Rectangle Width="28" Height="28" Fill="#BB9966"/>
-                            <Rectangle Width="28" Height="28" Fill="#886633" Margin="4,0,0,0"/>
-                        </StackPanel>
-                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE7FC;" Foreground="#555555" HorizontalAlignment="Right" VerticalAlignment="Top"/>
-                        <TextBlock VerticalAlignment="Bottom" TextWrapping="Wrap" FontSize="13" Foreground="#333333"><Run Foreground="#006BA8" FontWeight="SemiBold">Dean Alam</Run><Run xml:space="preserve"> played </Run><Run FontWeight="SemiBold">KNACK</Run><Run>.</Run></TextBlock>
-                    </Grid>
-                </Border>
-            </UniformGrid>
-        </ScrollViewer>
-        <Grid Grid.Row="3" Background="#CC003087">
-            <Rectangle Height="1" Fill="#22FFFFFF" VerticalAlignment="Top"/>
-            <StackPanel Orientation="Horizontal" Margin="28,0,0,0" VerticalAlignment="Center">
-                <Border Width="18" Height="18" CornerRadius="9" Background="#33FFFFFF" Margin="0,0,6,0">
-                    <TextBlock Text="X" FontSize="10" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                </Border>
-                <TextBlock Text="Enter" Foreground="White" FontSize="13" Margin="0,0,24,0"/>
-                <Border Padding="4,1" Background="#33FFFFFF" Margin="0,0,6,0">
-                    <TextBlock Text="R1" FontSize="10" Foreground="White"/>
-                </Border>
-                <TextBlock Text="To the Right End" Foreground="White" FontSize="13"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,28,0" VerticalAlignment="Center">
-                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE77B;" FontSize="16" Foreground="White" Margin="0,0,8,0"/>
-                <TextBlock x:Name="BottomUserText" Text="User" Foreground="White" FontSize="13"/>
-            </StackPanel>
-        </Grid>
-    </Grid>
+xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+xmlns:views="clr-namespace:ConsoleMenu.Wpf.Views"
+xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+Background="Transparent">
+<views:ShellViewBase.Resources>
+<views:NotEmptyToVisibilityConverter x:Key="NotEmptyVis"/>
+<views:EmptyToVisibilityConverter x:Key="EmptyVis"/>
+<views:HashToBrushConverter x:Key="HashBrush"/>
+<views:InitialsConverter x:Key="Initials"/>
+<views:TileLabelConverter x:Key="TileLabel"/>
+</views:ShellViewBase.Resources>
+<Grid>
+<Grid.Background>
+<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+<GradientStop Color="#00439C" Offset="0"/>
+<GradientStop Color="#00265E" Offset="1"/>
+</LinearGradientBrush>
+</Grid.Background>
+<Grid.RowDefinitions>
+<RowDefinition Height="52"/>
+<RowDefinition Height="*"/>
+<RowDefinition Height="40"/>
+</Grid.RowDefinitions>
+<Ellipse Grid.RowSpan="3" Width="1600" Height="1600" Stroke="#0CFFFFFF" StrokeThickness="120"
+HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-620,-420,0,0" IsHitTestVisible="False"/>
+<Grid x:Name="DragArea" Grid.Row="0" Background="Transparent">
+<Grid.ColumnDefinitions>
+<ColumnDefinition Width="Auto"/>
+<ColumnDefinition Width="*"/>
+<ColumnDefinition Width="Auto"/>
+</Grid.ColumnDefinitions>
+<StackPanel Grid.Column="0" Orientation="Horizontal" Margin="28,0,0,0" VerticalAlignment="Center">
+<Ellipse Width="34" Height="34" Fill="#9FB3D1" Margin="0,0,10,0"/>
+<TextBlock x:Name="ProfileNameText" Text="User" Foreground="White" FontSize="17" VerticalAlignment="Center"/>
+</StackPanel>
+<StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+<StackPanel Margin="0,0,26,0">
+<Button x:Name="GamesTab" Content="&#xE7FC;" Style="{StaticResource Shell.IconButton}" HorizontalAlignment="Center"/>
+<TextBlock Text="GAMES &amp; MEDIA" FontSize="10" Foreground="White" HorizontalAlignment="Center"/>
+</StackPanel>
+<Grid Margin="0,0,26,0" VerticalAlignment="Center">
+<Button x:Name="MailButton" Content="&#xE715;" Style="{StaticResource Shell.IconButton}"/>
+<Border Background="#E3C93E" CornerRadius="7" Width="14" Height="14" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,2,0" IsHitTestVisible="False">
+<TextBlock Text="2" FontSize="9" Foreground="#111111" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+</Border>
+</Grid>
+<Button x:Name="FriendsButton" Content="&#xE783;" Style="{StaticResource Shell.IconButton}" Margin="0,0,26,0"/>
+<Button x:Name="PartyButton" Content="&#xE77B;" Style="{StaticResource Shell.IconButton}" Margin="0,0,26,0"/>
+<Button x:Name="TrophyButton" Content="&#xE734;" Style="{StaticResource Shell.IconButton}" Margin="0,0,26,0"/>
+<Button x:Name="SettingsButton" Content="&#xE713;" Style="{StaticResource Shell.IconButton}" Margin="0,0,26,0"/>
+<Button x:Name="PowerButton" Content="&#xE7E8;" Style="{StaticResource Shell.IconButton}"/>
+</StackPanel>
+<TextBlock Grid.Column="2" x:Name="ClockText" FontSize="16" Foreground="White" VerticalAlignment="Center" Margin="0,0,28,0"/>
+<Rectangle Height="1" Fill="#22FFFFFF" VerticalAlignment="Bottom"/>
+</Grid>
+<Grid Grid.Row="1">
+<Grid x:Name="HomePanel">
+<ListBox x:Name="GamesList" VerticalAlignment="Top" Margin="24,44,24,0"
+Background="Transparent" BorderThickness="0"
+ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+<ListBox.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate></ListBox.ItemsPanel>
+<ListBox.ItemContainerStyle>
+<Style TargetType="ListBoxItem">
+<Setter Property="Template">
+<Setter.Value>
+<ControlTemplate TargetType="ListBoxItem">
+<StackPanel Width="164" Margin="0,0,10,0" HorizontalAlignment="Center">
+<Border x:Name="Bd" Width="150" Height="150" BorderThickness="3" BorderBrush="#00FFFFFF"
+Background="Transparent" RenderTransformOrigin="0.5,0.5">
+<ContentPresenter/>
+</Border>
+<TextBlock Text="{Binding Converter={StaticResource TileLabel}}" FontSize="13" Foreground="White"
+HorizontalAlignment="Center" Margin="0,8,0,0" TextTrimming="CharacterEllipsis" MaxWidth="164"/>
+</StackPanel>
+<ControlTemplate.Triggers>
+<Trigger Property="IsSelected" Value="True">
+<Setter TargetName="Bd" Property="BorderBrush" Value="#FFFFFFFF"/>
+<Setter TargetName="Bd" Property="RenderTransform">
+<Setter.Value><ScaleTransform ScaleX="1.1" ScaleY="1.1"/></Setter.Value>
+</Setter>
+</Trigger>
+</ControlTemplate.Triggers>
+</ControlTemplate>
+</Setter.Value>
+</Setter>
+</Style>
+</ListBox.ItemContainerStyle>
+</ListBox>
+<Border x:Name="ToastHost" Visibility="Collapsed" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,24,16"
+Background="#CC000000" CornerRadius="4" Padding="16,10">
+<StackPanel Orientation="Horizontal">
+<Ellipse Width="26" Height="26" Fill="#33FFFFFF" Margin="0,0,10,0"/>
+<TextBlock x:Name="ToastText" Foreground="White" FontSize="13" VerticalAlignment="Center"/>
+</StackPanel>
+</Border>
+</Grid>
+<Grid x:Name="WebPanel" Visibility="Collapsed">
+<wv2:WebView2 x:Name="ShellWebView"/>
+<Border x:Name="WebFallback" Visibility="Collapsed" Background="#26FFFFFF">
+<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+<TextBlock Text="WebView2 unavailable" FontSize="22" Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+<Button x:Name="OpenBrowserButton" Content="Open in browser" HorizontalAlignment="Center"/>
+</StackPanel>
+</Border>
+</Grid>
+</Grid>
+<Grid Grid.Row="2">
+<Rectangle Height="1" Fill="#22FFFFFF" VerticalAlignment="Top"/>
+<StackPanel Orientation="Horizontal" Margin="28,0,0,0" VerticalAlignment="Center">
+<Button x:Name="PlayButton" Style="{StaticResource Shell.FlatButton}" Margin="0,0,26,0">
+<StackPanel Orientation="Horizontal">
+<Border Width="20" Height="20" CornerRadius="10" Background="#33FFFFFF" Margin="0,0,6,0">
+<TextBlock Text="&#x2715;" FontSize="11" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+</Border>
+<TextBlock Text="PLAY" FontSize="13" Foreground="White" VerticalAlignment="Center"/>
+</StackPanel>
+</Button>
+<Button x:Name="EjectButton" Style="{StaticResource Shell.FlatButton}" Margin="0,0,26,0">
+<StackPanel Orientation="Horizontal">
+<Border Width="20" Height="20" BorderBrush="#66FFFFFF" BorderThickness="1" Margin="0,0,6,0">
+<TextBlock Text="&#x25A1;" FontSize="11" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+</Border>
+<TextBlock Text="EJECT" FontSize="13" Foreground="White" VerticalAlignment="Center"/>
+</StackPanel>
+</Button>
+<Button x:Name="DetailsButton" Style="{StaticResource Shell.FlatButton}" Margin="0,0,26,0">
+<StackPanel Orientation="Horizontal">
+<Border Width="20" Height="20" Margin="0,0,6,0">
+<TextBlock Text="&#x25B3;" FontSize="13" Foreground="#7FD4FF" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+</Border>
+<TextBlock Text="DETAILS" FontSize="13" Foreground="White" VerticalAlignment="Center"/>
+</StackPanel>
+</Button>
+<Button x:Name="CustomizeButton" Style="{StaticResource Shell.FlatButton}">
+<StackPanel Orientation="Horizontal">
+<Border Background="#33FFFFFF" CornerRadius="8" Padding="8,2" Margin="0,0,6,0">
+<TextBlock Text="OPTIONS" FontSize="9" Foreground="White" VerticalAlignment="Center"/>
+</Border>
+<TextBlock Text="CUSTOMIZE" FontSize="13" Foreground="White" VerticalAlignment="Center"/>
+</StackPanel>
+</Button>
+</StackPanel>
+</Grid>
+</Grid>
 </views:ShellViewBase>

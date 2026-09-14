@@ -1,12 +1,60 @@
 ﻿================================================================
   PROJECT REPORT : console-menu
-  GENERATED      : 14.09.2026 11:01:14
+  GENERATED      : 14.09.2026 11:35:15
   PATH           : C:\Users\290-23\Desktop\console\console-menu
 ================================================================
 
 ==================== STRUCTURE ====================
 
 C:\Users\290-23\Desktop\console\console-menu
++---build
+|   \---publish
+|       +---ConsoleMenu.Core.dll
+|       +---ConsoleMenu.Core.pdb
+|       +---ConsoleMenu.Wpf.exe
+|       +---ConsoleMenu.Wpf.exe.config
+|       +---ConsoleMenu.Wpf.pdb
+|       +---data
+|       |   +---games.json
+|       |   +---media
+|       |   |   \---placeholders
+|       |   |       +---avatar.svg
+|       |   |       +---cover.svg
+|       |   |       +---hero.svg
+|       |   |       \---icon.svg
+|       |   +---profiles.json
+|       |   +---settings.json
+|       |   +---store.json
+|       |   +---store-page.html
+|       |   \---ui
+|       |       +---ps4
+|       |       |   +---media.html
+|       |       |   +---profiles.html
+|       |       |   +---settings.html
+|       |       |   \---store.html
+|       |       \---ps5
+|       |           +---media.html
+|       |           +---profiles.html
+|       |           +---settings.html
+|       |           \---store.html
+|       +---Microsoft.Bcl.AsyncInterfaces.dll
+|       +---Microsoft.Web.WebView2.Core.dll
+|       +---Microsoft.Web.WebView2.WinForms.dll
+|       +---Microsoft.Web.WebView2.Wpf.dll
+|       +---runtimes
+|       |   \---win-x64
+|       |       \---native
+|       |           \---WebView2Loader.dll
+|       +---System.Buffers.dll
+|       +---System.Memory.dll
+|       +---System.Numerics.Vectors.dll
+|       +---System.Runtime.CompilerServices.Unsafe.dll
+|       +---System.Text.Encodings.Web.dll
+|       +---System.Text.Json.dll
+|       +---System.Threading.Tasks.Extensions.dll
+|       +---System.ValueTuple.dll
+|       \---WebView2Loader.dll
++---build-to-result.bat
 +---check.bat
 +---ConsoleMenu.sln
 +---data
@@ -33,6 +81,53 @@ C:\Users\290-23\Desktop\console\console-menu
 |           +---settings.html
 |           \---store.html
 +---init-github.bat
++---result
+|   +---ConsoleMenu.Core.dll
+|   +---ConsoleMenu.Core.pdb
+|   +---ConsoleMenu.Wpf.exe
+|   +---ConsoleMenu.Wpf.exe.config
+|   +---ConsoleMenu.Wpf.pdb
+|   +---data
+|   |   +---games.json
+|   |   +---installs
+|   |   +---media
+|   |   |   \---placeholders
+|   |   |       +---avatar.svg
+|   |   |       +---cover.svg
+|   |   |       +---hero.svg
+|   |   |       \---icon.svg
+|   |   +---profiles.json
+|   |   +---settings.json
+|   |   +---store.json
+|   |   +---store-page.html
+|   |   \---ui
+|   |       +---ps4
+|   |       |   +---media.html
+|   |       |   +---profiles.html
+|   |       |   +---settings.html
+|   |       |   \---store.html
+|   |       \---ps5
+|   |           +---media.html
+|   |           +---profiles.html
+|   |           +---settings.html
+|   |           \---store.html
+|   +---Microsoft.Bcl.AsyncInterfaces.dll
+|   +---Microsoft.Web.WebView2.Core.dll
+|   +---Microsoft.Web.WebView2.WinForms.dll
+|   +---Microsoft.Web.WebView2.Wpf.dll
+|   +---runtimes
+|   |   \---win-x64
+|   |       \---native
+|   |           \---WebView2Loader.dll
+|   +---System.Buffers.dll
+|   +---System.Memory.dll
+|   +---System.Numerics.Vectors.dll
+|   +---System.Runtime.CompilerServices.Unsafe.dll
+|   +---System.Text.Encodings.Web.dll
+|   +---System.Text.Json.dll
+|   +---System.Threading.Tasks.Extensions.dll
+|   +---System.ValueTuple.dll
+|   \---WebView2Loader.dll
 +---src
 |   +---ConsoleMenu.Core
 |   |   +---ConsoleMenu.Core.csproj
@@ -76,6 +171,100 @@ C:\Users\290-23\Desktop\console\console-menu
 \---update-console-menu.ps1
 
 ==================== SOURCE FILES ====================
+
+------------------------------------------------
+FILE: build-to-result.bat
+SIZE: 2146 bytes
+------------------------------------------------
+@echo off
+setlocal
+cd /d "%~dp0"
+
+set "ROOT=%~dp0"
+if "%ROOT:~-1%"=="\" set "ROOT=%ROOT:~0,-1%"
+set "PROJ=%ROOT%\src\ConsoleMenu.Wpf\ConsoleMenu.Wpf.csproj"
+set "PUBLISH=%ROOT%\build\publish"
+set "RESULT=%ROOT%\result"
+
+where dotnet >nul 2>&1
+if errorlevel 1 (
+  echo [XX] dotnet not found
+  exit /b 1
+)
+
+if not exist "%PROJ%" (
+  echo [XX] %PROJ% not found
+  exit /b 1
+)
+
+tasklist /FI "IMAGENAME eq ConsoleMenu.Wpf.exe" 2>NUL | find /I "ConsoleMenu.Wpf.exe" >NUL
+if not errorlevel 1 (
+  echo [XX] Close ConsoleMenu.Wpf.exe before building
+  exit /b 1
+)
+
+echo [i] Clean publish cache
+if exist "%PUBLISH%" rmdir /s /q "%PUBLISH%"
+if not exist "%RESULT%" mkdir "%RESULT%"
+if not exist "%RESULT%\data" mkdir "%RESULT%\data"
+
+echo [i] Clean result except data
+pushd "%RESULT%"
+for %%F in (*) do del /f /q /a "%%F" >nul 2>&1
+for /D %%D in (*) do if /I not "%%D"=="data" rmdir /s /q "%%D" >nul 2>&1
+popd
+
+echo [i] Publish backend and WPF shell
+dotnet publish "%PROJ%" -c Release -o "%PUBLISH%" -v q --nologo
+if errorlevel 1 (
+  echo [XX] Publish failed
+  exit /b 1
+)
+
+echo [i] Copy build into result
+robocopy "%PUBLISH%" "%RESULT%" /E /XD data /NFL /NDL /NP /NJH /NJS /NC /NS
+if errorlevel 8 (
+  echo [XX] Robocopy failed
+  exit /b 1
+)
+
+if exist "%ROOT%\data\ui" (
+  echo [i] Sync frontend ui
+  robocopy "%ROOT%\data\ui" "%RESULT%\data\ui" /MIR /NFL /NDL /NP /NJH /NJS /NC /NS
+  if errorlevel 8 (
+    echo [XX] UI copy failed
+    exit /b 1
+  )
+)
+
+if exist "%ROOT%\data\media" (
+  echo [i] Sync frontend media without deleting user files
+  robocopy "%ROOT%\data\media" "%RESULT%\data\media" /E /NFL /NDL /NP /NJH /NJS /NC /NS
+  if errorlevel 8 (
+    echo [XX] Media copy failed
+    exit /b 1
+  )
+)
+
+if exist "%ROOT%\data\store-page.html" (
+  echo [i] Copy store-page.html
+  copy /Y "%ROOT%\data\store-page.html" "%RESULT%\data\store-page.html" >nul
+  if errorlevel 1 (
+    echo [XX] store-page.html copy failed
+    exit /b 1
+  )
+)
+
+if not exist "%RESULT%\data\store.json" (
+  if exist "%ROOT%\data\store.json" (
+    echo [i] Seed store.json
+    copy /Y "%ROOT%\data\store.json" "%RESULT%\data\store.json" >nul
+  )
+)
+
+echo [OK] Result: %RESULT%
+exit /b 0
+
 
 ------------------------------------------------
 FILE: check.bat
@@ -555,6 +744,322 @@ if (Get-Command dotnet -ErrorAction SilentlyContinue) { dotnet build (Join-Path 
 
 
 ------------------------------------------------
+FILE: build\publish\data\games.json
+SIZE: 19 bytes
+------------------------------------------------
+{
+  "Games": []
+}
+
+
+------------------------------------------------
+FILE: build\publish\data\profiles.json
+SIZE: 48 bytes
+------------------------------------------------
+{
+  "Profiles": [],
+  "ActiveProfileId": ""
+}
+
+
+------------------------------------------------
+FILE: build\publish\data\settings.json
+SIZE: 157 bytes
+------------------------------------------------
+{
+  "Theme": "ps5",
+  "InstallDirectory": "",
+  "OverlayHotKey": "Ctrl+Shift+M",
+  "EnableBoost": true,
+  "ActiveProfileId": "",
+  "GitHubToken": ""
+}
+
+
+------------------------------------------------
+FILE: build\publish\data\store-page.html
+SIZE: 1015 bytes
+------------------------------------------------
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>Console Menu Store</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Segoe UI, Arial, sans-serif;
+      color: white;
+      background: linear-gradient(135deg, #10131a, #1b2130);
+      display: grid;
+      place-items: center;
+    }
+
+    .card {
+      width: min(920px, 92vw);
+      padding: 32px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: 42px;
+    }
+
+    p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Console Menu Store</h1>
+    <p>Здесь будет красивая страница проекта из GitHub Releases.</p>
+  </main>
+</body>
+</html>
+
+
+------------------------------------------------
+FILE: build\publish\data\store.json
+SIZE: 185 bytes
+------------------------------------------------
+{
+  "Entries": [
+    {
+      "Repo": "YOUR_GITHUB_USER/YOUR_REPO",
+      "ReleaseMode": "latest",
+      "AssetPattern": "*.zip",
+      "PagePath": "store-page.html"
+    }
+  ]
+}
+
+
+------------------------------------------------
+FILE: build\publish\data\ui\ps4\media.html
+SIZE: 1096 bytes
+------------------------------------------------
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>PS4 - Media</title>
+<style>
+body { margin:0; min-height:100vh; font-family:Segoe UI,Arial; color:#fff; background:linear-gradient(180deg,#00439C,#00265E); }
+.top { padding:18px 24px; font-size:24px; font-weight:600; color:#BBDEFB; }
+.card { margin:0 24px 24px; padding:24px; border-radius:18px; background:rgba(0,112,204,.22); border:1px solid rgba(255,255,255,.12); }
+button, select { background:rgba(255,255,255,.16); color:#fff; border:0; padding:10px 14px; border-radius:10px; margin:0 8px 8px 0; cursor:pointer; }
+img { border-radius:12px; }
+</style>
+</head>
+<body>
+<div class='top'>PS4 - Media</div>
+<div class='card'><p>Media placeholders in data/media/placeholders.</p><img style='width:320px;height:180px' src='../../media/placeholders/cover.svg'><br><button onclick='send("home")'>Back</button></div>
+<script>
+function send(action, value) { if (window.chrome && chrome.webview) { chrome.webview.postMessage(JSON.stringify({ action: action, value: value || '' })); } }
+</script>
+</body>
+</html>
+
+
+------------------------------------------------
+FILE: build\publish\data\ui\ps4\profiles.html
+SIZE: 1052 bytes
+------------------------------------------------
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>PS4 - Profiles</title>
+<style>
+body { margin:0; min-height:100vh; font-family:Segoe UI,Arial; color:#fff; background:linear-gradient(180deg,#00439C,#00265E); }
+.top { padding:18px 24px; font-size:24px; font-weight:600; color:#BBDEFB; }
+.card { margin:0 24px 24px; padding:24px; border-radius:18px; background:rgba(0,112,204,.22); border:1px solid rgba(255,255,255,.12); }
+button, select { background:rgba(255,255,255,.16); color:#fff; border:0; padding:10px 14px; border-radius:10px; margin:0 8px 8px 0; cursor:pointer; }
+img { border-radius:12px; }
+</style>
+</head>
+<body>
+<div class='top'>PS4 - Profiles</div>
+<div class='card'><p>Profiles</p><button onclick='send("addProfile", "Player 1")'>Add Player 1</button> <button onclick='send("home")'>Back</button></div>
+<script>
+function send(action, value) { if (window.chrome && chrome.webview) { chrome.webview.postMessage(JSON.stringify({ action: action, value: value || '' })); } }
+</script>
+</body>
+</html>
+
+
+------------------------------------------------
+FILE: build\publish\data\ui\ps4\settings.html
+SIZE: 1109 bytes
+------------------------------------------------
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>PS4 - Settings</title>
+<style>
+body { margin:0; min-height:100vh; font-family:Segoe UI,Arial; color:#fff; background:linear-gradient(180deg,#00439C,#00265E); }
+.top { padding:18px 24px; font-size:24px; font-weight:600; color:#BBDEFB; }
+.card { margin:0 24px 24px; padding:24px; border-radius:18px; background:rgba(0,112,204,.22); border:1px solid rgba(255,255,255,.12); }
+button, select { background:rgba(255,255,255,.16); color:#fff; border:0; padding:10px 14px; border-radius:10px; margin:0 8px 8px 0; cursor:pointer; }
+img { border-radius:12px; }
+</style>
+</head>
+<body>
+<div class='top'>PS4 - Settings</div>
+<div class='card'><p>Shell theme</p><select onchange='send("setTheme", this.value)'><option value='ps5'>PS5</option><option value='ps4'>PS4</option></select><br><button onclick='send("home")'>Back</button></div>
+<script>
+function send(action, value) { if (window.chrome && chrome.webview) { chrome.webview.postMessage(JSON.stringify({ action: action, value: value || '' })); } }
+</script>
+</body>
+</html>
+
+
+------------------------------------------------
+FILE: build\publish\data\ui\ps4\store.html
+SIZE: 1251 bytes
+------------------------------------------------
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>PS4 - Store</title>
+<style>
+body { margin:0; min-height:100vh; font-family:Segoe UI,Arial; color:#fff; background:linear-gradient(180deg,#00439C,#00265E); }
+.top { padding:18px 24px; font-size:24px; font-weight:600; color:#BBDEFB; }
+.card { margin:0 24px 24px; padding:24px; border-radius:18px; background:rgba(0,112,204,.22); border:1px solid rgba(255,255,255,.12); }
+button, select { background:rgba(255,255,255,.16); color:#fff; border:0; padding:10px 14px; border-radius:10px; margin:0 8px 8px 0; cursor:pointer; }
+img { border-radius:12px; }
+</style>
+</head>
+<body>
+<div class='top'>PS4 - Store</div>
+<div class='card'><p>Store: GitHub releases and local .exe.</p><button onclick='send("installLatest")'>Install latest release</button> <button onclick='send("addGame")'>Add .exe</button> <button onclick='send("launchSelected")'>Launch selected</button> <button onclick='send("refreshGames")'>Refresh</button> <button onclick='send("home")'>Back</button></div>
+<script>
+function send(action, value) { if (window.chrome && chrome.webview) { chrome.webview.postMessage(JSON.stringify({ action: action, value: value || '' })); } }
+</script>
+</body>
+</html>
+
+
+------------------------------------------------
+FILE: build\publish\data\ui\ps5\media.html
+SIZE: 1098 bytes
+------------------------------------------------
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>PS5 - Media</title>
+<style>
+body { margin:0; min-height:100vh; font-family:Segoe UI,Arial; color:#fff; background:linear-gradient(135deg,#090D16,#1B2A47); }
+.top { padding:18px 24px; font-size:24px; font-weight:600; color:#FFFFFF; }
+.card { margin:0 24px 24px; padding:24px; border-radius:18px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); }
+button, select { background:rgba(255,255,255,.16); color:#fff; border:0; padding:10px 14px; border-radius:10px; margin:0 8px 8px 0; cursor:pointer; }
+img { border-radius:12px; }
+</style>
+</head>
+<body>
+<div class='top'>PS5 - Media</div>
+<div class='card'><p>Media placeholders in data/media/placeholders.</p><img style='width:320px;height:180px' src='../../media/placeholders/cover.svg'><br><button onclick='send("home")'>Back</button></div>
+<script>
+function send(action, value) { if (window.chrome && chrome.webview) { chrome.webview.postMessage(JSON.stringify({ action: action, value: value || '' })); } }
+</script>
+</body>
+</html>
+
+
+------------------------------------------------
+FILE: build\publish\data\ui\ps5\profiles.html
+SIZE: 1054 bytes
+------------------------------------------------
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>PS5 - Profiles</title>
+<style>
+body { margin:0; min-height:100vh; font-family:Segoe UI,Arial; color:#fff; background:linear-gradient(135deg,#090D16,#1B2A47); }
+.top { padding:18px 24px; font-size:24px; font-weight:600; color:#FFFFFF; }
+.card { margin:0 24px 24px; padding:24px; border-radius:18px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); }
+button, select { background:rgba(255,255,255,.16); color:#fff; border:0; padding:10px 14px; border-radius:10px; margin:0 8px 8px 0; cursor:pointer; }
+img { border-radius:12px; }
+</style>
+</head>
+<body>
+<div class='top'>PS5 - Profiles</div>
+<div class='card'><p>Profiles</p><button onclick='send("addProfile", "Player 1")'>Add Player 1</button> <button onclick='send("home")'>Back</button></div>
+<script>
+function send(action, value) { if (window.chrome && chrome.webview) { chrome.webview.postMessage(JSON.stringify({ action: action, value: value || '' })); } }
+</script>
+</body>
+</html>
+
+
+------------------------------------------------
+FILE: build\publish\data\ui\ps5\settings.html
+SIZE: 1111 bytes
+------------------------------------------------
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>PS5 - Settings</title>
+<style>
+body { margin:0; min-height:100vh; font-family:Segoe UI,Arial; color:#fff; background:linear-gradient(135deg,#090D16,#1B2A47); }
+.top { padding:18px 24px; font-size:24px; font-weight:600; color:#FFFFFF; }
+.card { margin:0 24px 24px; padding:24px; border-radius:18px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); }
+button, select { background:rgba(255,255,255,.16); color:#fff; border:0; padding:10px 14px; border-radius:10px; margin:0 8px 8px 0; cursor:pointer; }
+img { border-radius:12px; }
+</style>
+</head>
+<body>
+<div class='top'>PS5 - Settings</div>
+<div class='card'><p>Shell theme</p><select onchange='send("setTheme", this.value)'><option value='ps5'>PS5</option><option value='ps4'>PS4</option></select><br><button onclick='send("home")'>Back</button></div>
+<script>
+function send(action, value) { if (window.chrome && chrome.webview) { chrome.webview.postMessage(JSON.stringify({ action: action, value: value || '' })); } }
+</script>
+</body>
+</html>
+
+
+------------------------------------------------
+FILE: build\publish\data\ui\ps5\store.html
+SIZE: 1253 bytes
+------------------------------------------------
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>PS5 - Store</title>
+<style>
+body { margin:0; min-height:100vh; font-family:Segoe UI,Arial; color:#fff; background:linear-gradient(135deg,#090D16,#1B2A47); }
+.top { padding:18px 24px; font-size:24px; font-weight:600; color:#FFFFFF; }
+.card { margin:0 24px 24px; padding:24px; border-radius:18px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); }
+button, select { background:rgba(255,255,255,.16); color:#fff; border:0; padding:10px 14px; border-radius:10px; margin:0 8px 8px 0; cursor:pointer; }
+img { border-radius:12px; }
+</style>
+</head>
+<body>
+<div class='top'>PS5 - Store</div>
+<div class='card'><p>Store: GitHub releases and local .exe.</p><button onclick='send("installLatest")'>Install latest release</button> <button onclick='send("addGame")'>Add .exe</button> <button onclick='send("launchSelected")'>Launch selected</button> <button onclick='send("refreshGames")'>Refresh</button> <button onclick='send("home")'>Back</button></div>
+<script>
+function send(action, value) { if (window.chrome && chrome.webview) { chrome.webview.postMessage(JSON.stringify({ action: action, value: value || '' })); } }
+</script>
+</body>
+</html>
+
+
+------------------------------------------------
 FILE: data\games.json
 SIZE: 19 bytes
 ------------------------------------------------
@@ -845,6 +1350,330 @@ function send(action, value) { if (window.chrome && chrome.webview) { chrome.web
 
 ------------------------------------------------
 FILE: data\ui\ps5\store.html
+SIZE: 1253 bytes
+------------------------------------------------
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>PS5 - Store</title>
+<style>
+body { margin:0; min-height:100vh; font-family:Segoe UI,Arial; color:#fff; background:linear-gradient(135deg,#090D16,#1B2A47); }
+.top { padding:18px 24px; font-size:24px; font-weight:600; color:#FFFFFF; }
+.card { margin:0 24px 24px; padding:24px; border-radius:18px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); }
+button, select { background:rgba(255,255,255,.16); color:#fff; border:0; padding:10px 14px; border-radius:10px; margin:0 8px 8px 0; cursor:pointer; }
+img { border-radius:12px; }
+</style>
+</head>
+<body>
+<div class='top'>PS5 - Store</div>
+<div class='card'><p>Store: GitHub releases and local .exe.</p><button onclick='send("installLatest")'>Install latest release</button> <button onclick='send("addGame")'>Add .exe</button> <button onclick='send("launchSelected")'>Launch selected</button> <button onclick='send("refreshGames")'>Refresh</button> <button onclick='send("home")'>Back</button></div>
+<script>
+function send(action, value) { if (window.chrome && chrome.webview) { chrome.webview.postMessage(JSON.stringify({ action: action, value: value || '' })); } }
+</script>
+</body>
+</html>
+
+
+------------------------------------------------
+FILE: result\data\games.json
+SIZE: 19 bytes
+------------------------------------------------
+{
+  "Games": []
+}
+
+
+------------------------------------------------
+FILE: result\data\profiles.json
+SIZE: 223 bytes
+------------------------------------------------
+{
+  "Profiles": [
+    {
+      "Id": "153bed48be7341fcb01330783049559d",
+      "Name": "Default",
+      "AvatarPath": "",
+      "FavoriteGameIds": [],
+      "RecentGameIds": []
+    }
+  ],
+  "ActiveProfileId": ""
+}
+
+
+------------------------------------------------
+FILE: result\data\settings.json
+SIZE: 240 bytes
+------------------------------------------------
+{
+  "Theme": "ps5",
+  "InstallDirectory": "C:\\Users\\290-23\\Desktop\\console\\console-menu\\result\\data\\installs",
+  "OverlayHotKey": "Ctrl\u002BShift\u002BM",
+  "EnableBoost": true,
+  "ActiveProfileId": "",
+  "GitHubToken": ""
+}
+
+
+------------------------------------------------
+FILE: result\data\store-page.html
+SIZE: 1015 bytes
+------------------------------------------------
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>Console Menu Store</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Segoe UI, Arial, sans-serif;
+      color: white;
+      background: linear-gradient(135deg, #10131a, #1b2130);
+      display: grid;
+      place-items: center;
+    }
+
+    .card {
+      width: min(920px, 92vw);
+      padding: 32px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: 42px;
+    }
+
+    p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Console Menu Store</h1>
+    <p>Здесь будет красивая страница проекта из GitHub Releases.</p>
+  </main>
+</body>
+</html>
+
+
+------------------------------------------------
+FILE: result\data\store.json
+SIZE: 185 bytes
+------------------------------------------------
+{
+  "Entries": [
+    {
+      "Repo": "YOUR_GITHUB_USER/YOUR_REPO",
+      "ReleaseMode": "latest",
+      "AssetPattern": "*.zip",
+      "PagePath": "store-page.html"
+    }
+  ]
+}
+
+
+------------------------------------------------
+FILE: result\data\ui\ps4\media.html
+SIZE: 1096 bytes
+------------------------------------------------
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>PS4 - Media</title>
+<style>
+body { margin:0; min-height:100vh; font-family:Segoe UI,Arial; color:#fff; background:linear-gradient(180deg,#00439C,#00265E); }
+.top { padding:18px 24px; font-size:24px; font-weight:600; color:#BBDEFB; }
+.card { margin:0 24px 24px; padding:24px; border-radius:18px; background:rgba(0,112,204,.22); border:1px solid rgba(255,255,255,.12); }
+button, select { background:rgba(255,255,255,.16); color:#fff; border:0; padding:10px 14px; border-radius:10px; margin:0 8px 8px 0; cursor:pointer; }
+img { border-radius:12px; }
+</style>
+</head>
+<body>
+<div class='top'>PS4 - Media</div>
+<div class='card'><p>Media placeholders in data/media/placeholders.</p><img style='width:320px;height:180px' src='../../media/placeholders/cover.svg'><br><button onclick='send("home")'>Back</button></div>
+<script>
+function send(action, value) { if (window.chrome && chrome.webview) { chrome.webview.postMessage(JSON.stringify({ action: action, value: value || '' })); } }
+</script>
+</body>
+</html>
+
+
+------------------------------------------------
+FILE: result\data\ui\ps4\profiles.html
+SIZE: 1052 bytes
+------------------------------------------------
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>PS4 - Profiles</title>
+<style>
+body { margin:0; min-height:100vh; font-family:Segoe UI,Arial; color:#fff; background:linear-gradient(180deg,#00439C,#00265E); }
+.top { padding:18px 24px; font-size:24px; font-weight:600; color:#BBDEFB; }
+.card { margin:0 24px 24px; padding:24px; border-radius:18px; background:rgba(0,112,204,.22); border:1px solid rgba(255,255,255,.12); }
+button, select { background:rgba(255,255,255,.16); color:#fff; border:0; padding:10px 14px; border-radius:10px; margin:0 8px 8px 0; cursor:pointer; }
+img { border-radius:12px; }
+</style>
+</head>
+<body>
+<div class='top'>PS4 - Profiles</div>
+<div class='card'><p>Profiles</p><button onclick='send("addProfile", "Player 1")'>Add Player 1</button> <button onclick='send("home")'>Back</button></div>
+<script>
+function send(action, value) { if (window.chrome && chrome.webview) { chrome.webview.postMessage(JSON.stringify({ action: action, value: value || '' })); } }
+</script>
+</body>
+</html>
+
+
+------------------------------------------------
+FILE: result\data\ui\ps4\settings.html
+SIZE: 1109 bytes
+------------------------------------------------
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>PS4 - Settings</title>
+<style>
+body { margin:0; min-height:100vh; font-family:Segoe UI,Arial; color:#fff; background:linear-gradient(180deg,#00439C,#00265E); }
+.top { padding:18px 24px; font-size:24px; font-weight:600; color:#BBDEFB; }
+.card { margin:0 24px 24px; padding:24px; border-radius:18px; background:rgba(0,112,204,.22); border:1px solid rgba(255,255,255,.12); }
+button, select { background:rgba(255,255,255,.16); color:#fff; border:0; padding:10px 14px; border-radius:10px; margin:0 8px 8px 0; cursor:pointer; }
+img { border-radius:12px; }
+</style>
+</head>
+<body>
+<div class='top'>PS4 - Settings</div>
+<div class='card'><p>Shell theme</p><select onchange='send("setTheme", this.value)'><option value='ps5'>PS5</option><option value='ps4'>PS4</option></select><br><button onclick='send("home")'>Back</button></div>
+<script>
+function send(action, value) { if (window.chrome && chrome.webview) { chrome.webview.postMessage(JSON.stringify({ action: action, value: value || '' })); } }
+</script>
+</body>
+</html>
+
+
+------------------------------------------------
+FILE: result\data\ui\ps4\store.html
+SIZE: 1251 bytes
+------------------------------------------------
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>PS4 - Store</title>
+<style>
+body { margin:0; min-height:100vh; font-family:Segoe UI,Arial; color:#fff; background:linear-gradient(180deg,#00439C,#00265E); }
+.top { padding:18px 24px; font-size:24px; font-weight:600; color:#BBDEFB; }
+.card { margin:0 24px 24px; padding:24px; border-radius:18px; background:rgba(0,112,204,.22); border:1px solid rgba(255,255,255,.12); }
+button, select { background:rgba(255,255,255,.16); color:#fff; border:0; padding:10px 14px; border-radius:10px; margin:0 8px 8px 0; cursor:pointer; }
+img { border-radius:12px; }
+</style>
+</head>
+<body>
+<div class='top'>PS4 - Store</div>
+<div class='card'><p>Store: GitHub releases and local .exe.</p><button onclick='send("installLatest")'>Install latest release</button> <button onclick='send("addGame")'>Add .exe</button> <button onclick='send("launchSelected")'>Launch selected</button> <button onclick='send("refreshGames")'>Refresh</button> <button onclick='send("home")'>Back</button></div>
+<script>
+function send(action, value) { if (window.chrome && chrome.webview) { chrome.webview.postMessage(JSON.stringify({ action: action, value: value || '' })); } }
+</script>
+</body>
+</html>
+
+
+------------------------------------------------
+FILE: result\data\ui\ps5\media.html
+SIZE: 1098 bytes
+------------------------------------------------
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>PS5 - Media</title>
+<style>
+body { margin:0; min-height:100vh; font-family:Segoe UI,Arial; color:#fff; background:linear-gradient(135deg,#090D16,#1B2A47); }
+.top { padding:18px 24px; font-size:24px; font-weight:600; color:#FFFFFF; }
+.card { margin:0 24px 24px; padding:24px; border-radius:18px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); }
+button, select { background:rgba(255,255,255,.16); color:#fff; border:0; padding:10px 14px; border-radius:10px; margin:0 8px 8px 0; cursor:pointer; }
+img { border-radius:12px; }
+</style>
+</head>
+<body>
+<div class='top'>PS5 - Media</div>
+<div class='card'><p>Media placeholders in data/media/placeholders.</p><img style='width:320px;height:180px' src='../../media/placeholders/cover.svg'><br><button onclick='send("home")'>Back</button></div>
+<script>
+function send(action, value) { if (window.chrome && chrome.webview) { chrome.webview.postMessage(JSON.stringify({ action: action, value: value || '' })); } }
+</script>
+</body>
+</html>
+
+
+------------------------------------------------
+FILE: result\data\ui\ps5\profiles.html
+SIZE: 1054 bytes
+------------------------------------------------
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>PS5 - Profiles</title>
+<style>
+body { margin:0; min-height:100vh; font-family:Segoe UI,Arial; color:#fff; background:linear-gradient(135deg,#090D16,#1B2A47); }
+.top { padding:18px 24px; font-size:24px; font-weight:600; color:#FFFFFF; }
+.card { margin:0 24px 24px; padding:24px; border-radius:18px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); }
+button, select { background:rgba(255,255,255,.16); color:#fff; border:0; padding:10px 14px; border-radius:10px; margin:0 8px 8px 0; cursor:pointer; }
+img { border-radius:12px; }
+</style>
+</head>
+<body>
+<div class='top'>PS5 - Profiles</div>
+<div class='card'><p>Profiles</p><button onclick='send("addProfile", "Player 1")'>Add Player 1</button> <button onclick='send("home")'>Back</button></div>
+<script>
+function send(action, value) { if (window.chrome && chrome.webview) { chrome.webview.postMessage(JSON.stringify({ action: action, value: value || '' })); } }
+</script>
+</body>
+</html>
+
+
+------------------------------------------------
+FILE: result\data\ui\ps5\settings.html
+SIZE: 1111 bytes
+------------------------------------------------
+<!doctype html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>PS5 - Settings</title>
+<style>
+body { margin:0; min-height:100vh; font-family:Segoe UI,Arial; color:#fff; background:linear-gradient(135deg,#090D16,#1B2A47); }
+.top { padding:18px 24px; font-size:24px; font-weight:600; color:#FFFFFF; }
+.card { margin:0 24px 24px; padding:24px; border-radius:18px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); }
+button, select { background:rgba(255,255,255,.16); color:#fff; border:0; padding:10px 14px; border-radius:10px; margin:0 8px 8px 0; cursor:pointer; }
+img { border-radius:12px; }
+</style>
+</head>
+<body>
+<div class='top'>PS5 - Settings</div>
+<div class='card'><p>Shell theme</p><select onchange='send("setTheme", this.value)'><option value='ps5'>PS5</option><option value='ps4'>PS4</option></select><br><button onclick='send("home")'>Back</button></div>
+<script>
+function send(action, value) { if (window.chrome && chrome.webview) { chrome.webview.postMessage(JSON.stringify({ action: action, value: value || '' })); } }
+</script>
+</body>
+</html>
+
+
+------------------------------------------------
+FILE: result\data\ui\ps5\store.html
 SIZE: 1253 bytes
 ------------------------------------------------
 <!doctype html>
@@ -2448,6 +3277,6 @@ namespace ConsoleMenu.Wpf.Views
 }
 
 ==================== SUMMARY ====================
-  Source files : 45
+  Source files : 72
   Report file  : console-menu_report.txt
 ================================================================

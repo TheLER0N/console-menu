@@ -1,55 +1,130 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
-                    xmlns:m="clr-namespace:ConsoleMenu.Core.Models;assembly=ConsoleMenu.Core"
-                    xmlns:views="clr-namespace:ConsoleMenu.Wpf.Views">
-    <sys:String x:Key="Brand.Text">PS5</sys:String>
-    <LinearGradientBrush x:Key="App.Background" StartPoint="0,0" EndPoint="1,1">
-        <GradientStop Color="#090D16" Offset="0"/>
-        <GradientStop Color="#1B2A47" Offset="1"/>
-    </LinearGradientBrush>
-    <SolidColorBrush x:Key="Tile.Background" Color="#18FFFFFF"/>
-    <SolidColorBrush x:Key="Tile.Selected" Color="#33FFFFFF"/>
-    <SolidColorBrush x:Key="Text.Primary" Color="#F5F7FF"/>
-    <SolidColorBrush x:Key="Text.Secondary" Color="#9FB3D1"/>
-    <CornerRadius x:Key="Window.CornerRadius">16</CornerRadius>
-    <CornerRadius x:Key="Tile.CornerRadius">14</CornerRadius>
-    <views:NotEmptyToVisibilityConverter x:Key="NotEmptyVis"/>
-    <views:EmptyToVisibilityConverter x:Key="EmptyVis"/>
-    <views:HashToBrushConverter x:Key="HashBrush"/>
-    <views:InitialsConverter x:Key="Initials"/>
-    <DataTemplate DataType="{x:Type m:GameEntry}">
-        <Grid Width="150" Height="150">
-            <Image Source="{Binding CoverPath}" Stretch="UniformToFill" Visibility="{Binding CoverPath, Converter={StaticResource NotEmptyVis}}"/>
-            <Grid Visibility="{Binding CoverPath, Converter={StaticResource EmptyVis}}">
-                <Rectangle Fill="{Binding Title, Converter={StaticResource HashBrush}}"/>
-                <TextBlock Text="{Binding Title, Converter={StaticResource Initials}}" FontSize="42" FontWeight="Bold" Foreground="#DDFFFFFF" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            </Grid>
-            <Border VerticalAlignment="Bottom" Background="#99000000" Padding="6,3">
-                <TextBlock Text="{Binding Title}" FontSize="11" Foreground="White" TextTrimming="CharacterEllipsis"/>
-            </Border>
-        </Grid>
-    </DataTemplate>
-    <DataTemplate DataType="{x:Type sys:Int32}">
-        <Border Width="150" Height="150" Background="#10FFFFFF" BorderBrush="#30FFFFFF" BorderThickness="1" CornerRadius="10">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBlock Text="+" FontSize="40" Foreground="#88FFFFFF" HorizontalAlignment="Center"/>
-                <TextBlock Text="&#x25B3; &#x25CB; &#x2715; &#x25A1;" FontSize="12" Foreground="#66FFFFFF" HorizontalAlignment="Center" Margin="0,6,0,0"/>
-            </StackPanel>
-        </Border>
-    </DataTemplate>
-    <Style TargetType="ListBox">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Foreground" Value="White"/>
-    </Style>
-    <Style TargetType="Button">
-        <Setter Property="Padding" Value="16,8"/>
-        <Setter Property="Margin" Value="0,0,8,0"/>
-        <Setter Property="Background" Value="#1FFFFFFF"/>
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="FontSize" Value="14"/>
-        <Setter Property="Cursor" Value="Hand"/>
-    </Style>
+xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+xmlns:sys="clr-namespace:System;assembly=mscorlib"
+xmlns:m="clr-namespace:ConsoleMenu.Core.Models;assembly=ConsoleMenu.Core"
+xmlns:views="clr-namespace:ConsoleMenu.Wpf.Views">
+<sys:String x:Key="Brand.Text">PS5</sys:String>
+<LinearGradientBrush x:Key="App.Background" StartPoint="0,0" EndPoint="1,1">
+<GradientStop Color="#090D16" Offset="0"/>
+<GradientStop Color="#1B2A47" Offset="1"/>
+</LinearGradientBrush>
+<SolidColorBrush x:Key="Tile.Background" Color="#18FFFFFF"/>
+<SolidColorBrush x:Key="Tile.Selected" Color="#33FFFFFF"/>
+<SolidColorBrush x:Key="Text.Primary" Color="#F5F7FF"/>
+<SolidColorBrush x:Key="Text.Secondary" Color="#9FB3D1"/>
+<CornerRadius x:Key="Window.CornerRadius">16</CornerRadius>
+<CornerRadius x:Key="Tile.CornerRadius">14</CornerRadius>
+<views:NotEmptyToVisibilityConverter x:Key="NotEmptyVis"/>
+<views:EmptyToVisibilityConverter x:Key="EmptyVis"/>
+<views:HashToBrushConverter x:Key="HashBrush"/>
+<views:InitialsConverter x:Key="Initials"/>
+<views:TileLabelConverter x:Key="TileLabel"/>
+<Style x:Key="Shell.IconButton" TargetType="Button">
+<Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+<Setter Property="FontSize" Value="18"/>
+<Setter Property="Foreground" Value="White"/>
+<Setter Property="Background" Value="Transparent"/>
+<Setter Property="BorderThickness" Value="0"/>
+<Setter Property="Padding" Value="8,6"/>
+<Setter Property="Margin" Value="0,0,6,0"/>
+<Setter Property="Cursor" Value="Hand"/>
+<Setter Property="Template">
+<Setter.Value>
+<ControlTemplate TargetType="Button">
+<Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+</Border>
+</ControlTemplate>
+</Setter.Value>
+</Setter>
+</Style>
+<Style x:Key="Shell.FlatButton" TargetType="Button">
+<Setter Property="FontSize" Value="13"/>
+<Setter Property="Foreground" Value="White"/>
+<Setter Property="Background" Value="Transparent"/>
+<Setter Property="BorderThickness" Value="0"/>
+<Setter Property="Padding" Value="6,4"/>
+<Setter Property="Cursor" Value="Hand"/>
+<Setter Property="Template">
+<Setter.Value>
+<ControlTemplate TargetType="Button">
+<Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+</Border>
+</ControlTemplate>
+</Setter.Value>
+</Setter>
+</Style>
+<Style x:Key="Shell.TabButton" TargetType="Button">
+<Setter Property="FontSize" Value="15"/>
+<Setter Property="FontWeight" Value="SemiBold"/>
+<Setter Property="Foreground" Value="White"/>
+<Setter Property="Background" Value="Transparent"/>
+<Setter Property="BorderThickness" Value="0"/>
+<Setter Property="Padding" Value="2,16"/>
+<Setter Property="Margin" Value="0,0,18,0"/>
+<Setter Property="Cursor" Value="Hand"/>
+<Setter Property="Template">
+<Setter.Value>
+<ControlTemplate TargetType="Button">
+<Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+</Border>
+</ControlTemplate>
+</Setter.Value>
+</Setter>
+</Style>
+<Style x:Key="Shell.PlayButton" TargetType="Button">
+<Setter Property="Foreground" Value="Black"/>
+<Setter Property="FontWeight" Value="Bold"/>
+<Setter Property="FontSize" Value="15"/>
+<Setter Property="BorderThickness" Value="0"/>
+<Setter Property="Cursor" Value="Hand"/>
+<Setter Property="Template">
+<Setter.Value>
+<ControlTemplate TargetType="Button">
+<Border Background="White" CornerRadius="18" Padding="24,8">
+<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+</Border>
+</ControlTemplate>
+</Setter.Value>
+</Setter>
+</Style>
+<Style TargetType="ListBox">
+<Setter Property="Background" Value="Transparent"/>
+<Setter Property="BorderThickness" Value="0"/>
+<Setter Property="Foreground" Value="White"/>
+</Style>
+<Style TargetType="Button">
+<Setter Property="Padding" Value="16,8"/>
+<Setter Property="Margin" Value="0,0,8,0"/>
+<Setter Property="Background" Value="#1FFFFFFF"/>
+<Setter Property="Foreground" Value="White"/>
+<Setter Property="BorderThickness" Value="0"/>
+<Setter Property="FontSize" Value="14"/>
+<Setter Property="Cursor" Value="Hand"/>
+</Style>
+<DataTemplate DataType="{x:Type m:GameEntry}">
+<Grid Width="84" Height="84">
+<Image Source="{Binding CoverPath}" Stretch="UniformToFill" Visibility="{Binding CoverPath, Converter={StaticResource NotEmptyVis}}"/>
+<Grid Visibility="{Binding CoverPath, Converter={StaticResource EmptyVis}}">
+<Rectangle Fill="{Binding Title, Converter={StaticResource HashBrush}}"/>
+<TextBlock Text="{Binding Title, Converter={StaticResource Initials}}" FontSize="28" FontWeight="Bold" Foreground="#DDFFFFFF" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+</Grid>
+</Grid>
+</DataTemplate>
+<DataTemplate DataType="{x:Type sys:Int32}">
+<Border Width="84" Height="84" Background="#10FFFFFF" BorderBrush="#30FFFFFF" BorderThickness="1" CornerRadius="6">
+<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+<TextBlock Text="+" FontSize="30" Foreground="#88FFFFFF" HorizontalAlignment="Center"/>
+<TextBlock Text="&#x25B3; &#x25CB; &#x2715; &#x25A1;" FontSize="10" Foreground="#66FFFFFF" HorizontalAlignment="Center" Margin="0,4,0,0"/>
+</StackPanel>
+</Border>
+</DataTemplate>
+<DataTemplate DataType="{x:Type views:ShellTile}">
+<Grid Width="84" Height="84">
+<Border Background="#18FFFFFF" CornerRadius="6"/>
+<TextBlock Text="{Binding Glyph}" FontFamily="Segoe MDL2 Assets" FontSize="28" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+</Grid>
+</DataTemplate>
 </ResourceDictionary>
